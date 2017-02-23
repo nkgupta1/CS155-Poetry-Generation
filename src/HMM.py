@@ -272,7 +272,7 @@ class HiddenMarkovModel:
             emission:   The randomly generated emission as a string.
         '''
 
-        emission = ''
+        emission = []
         state = random.choice(range(self.L))
 
         for t in range(M):
@@ -285,7 +285,7 @@ class HiddenMarkovModel:
                 next_obs += 1
 
             next_obs -= 1
-            emission += str(next_obs)
+            emission.append(next_obs)
 
             # Sample next state.
             rand_var = random.uniform(0, 1)
