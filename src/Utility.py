@@ -1,4 +1,5 @@
-########################################
+#
+######################################
 # CS/CNS/EE 155 2017
 # Problem Set 5
 #
@@ -41,7 +42,7 @@ class Utility:
 
                 line = ''.join(l for l in line if l not in string.punctuation)
 
-                word_seq = line.split()
+                word_seq = line.lower().split()
 
                 for word in word_seq:
                     if word not in word_map:
