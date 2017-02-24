@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+"""
+Recurrent Neural Network on sonnets tagged with parts of speech.
+"""
+
+from supervised_pos import load_pos
+
 import keras
 import numpy as np
 from keras.models import Sequential, load_model
@@ -9,6 +16,8 @@ import pickle
 datafile = 'shakespeare'
 Xmap, X, Y = pickle.load(open('Xm.X.Y_' + datafile + '.pkl', 'rb'))
 X, Y = np.array(X), np.array(Y)
+print(X.shape)
+print(Y.shape)
 
 model = Sequential()
 model.add(LSTM(32, input_dim=1, input_length=5))
