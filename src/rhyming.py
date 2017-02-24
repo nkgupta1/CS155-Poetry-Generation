@@ -172,13 +172,13 @@ def make_rhyming(datafile='shakespeare'):
     print('size', size)
     rhyme_mat = np.zeros((size, size), dtype=np.uint8)
     for d1 in range(0, size):
-        d1_rhymes = set(rhyme(Xmap[d1], 1))
+        d1_rhymes = set(rhyme(Xmap[d1], 2))
         print('processing %d/%d' % (d1, size))
         for d2 in range(0, d1):
             rhyme_mat[d1, d2] = (1 if Xmap[d2] in d1_rhymes else 0)
     rhyme_mat += rhyme_mat.T
     
-    with open('rhyme_mat' + str(size) + datafile + '.pkl', 'wb') as f:
+    with open('2rhyme_mat' + str(size) + datafile + '.pkl', 'wb') as f:
         pickle.dump(rhyme_mat, f, pickle.HIGHEST_PROTOCOL)
     return rhyme_mat
 
@@ -199,5 +199,5 @@ def make_syllables(datafile='shakespeare'):
     return syllables
 
 
-print(make_syllables())
+make_rhyming()
 

@@ -45,7 +45,7 @@ class Supervised:
         self.D = len(set(X))
         self.Y = Y
         self.Xmap = Xmap
-        self.get_rhyme_and_syllables(no_rhyme=0.2)
+        self.get_rhyme_and_syllables(no_rhyme=0.01)
         self.X = X
 
 
@@ -133,25 +133,29 @@ class Supervised:
             weighted_probs /= np.sum(weighted_probs)  # probs sum to 1
             state = np.random.choice(self.L, 1, p=weighted_probs)[0]
             states.append(state)
-        print(states)
-        # make observations that would fit these states
-        # sleft = syllables left = 10
-        # word = choose last word | rhymes
-        # sleft -= syllabeles(last) 
-        # while sleft > 0:
-        # word = choose best word with syllabeles(word) <= sleft
-        # sleft -= syllabeles(word)
+        # print(states)
+
         lines = []
         line = []
         previous_state = 0
         s = 0
+        rhyming_obs = np.zeros(14)
         while len(lines) < 14:
             syllables_left = 10
             while syllables_left > 0:
-                weighted_probs = self.O[state] * (self.syllables <= (10 - len(line)))
+                weighted_probs = self.O[state] * (self.syllables <= syllables_left)
+                if (((len(lines) // 2) + 1) % 2  == 0):
+                    # do rhyming on last word
+                    # print('rhyming', self.Xmap[int(rhyming_obs[len(lines) - 2])])
+                    # print(rhyming_obs[len(lines) - 2], self.rhyme_mat.shape)
+                    # print(self.syllables.shape[0], weighted_probs.shape)
+                    weighted_probs[(self.syllables == syllables_left)] *= (self.rhyme_mat[int(rhyming_obs[len(lines) - 2])])[(self.syllables == syllables_left)]
+                elif len(lines) == 13:
+                    # print('rhyming', self.Xmap[int(rhyming_obs[len(lines) - 1])])
+                    weighted_probs[self.syllables == syllables_left] *= (self.rhyme_mat[int(rhyming_obs[len(lines) - 1])])[(self.syllables == syllables_left)]
                 weighted_probs[previous_state] = 0  # don't duplicate words. does fine w/o this
                 weighted_probs /= np.sum(weighted_probs)  # probs sum to 1
-                print(len(line), len(lines))
+                # print(len(line), len(lines))
                 obs = np.random.choice(self.D, 1, p=weighted_probs)[0]
                 word = self.Xmap[obs]
                 line.append(word)
@@ -159,10 +163,11 @@ class Supervised:
                 previous_state = state
                 s += 1
                 state = states[s]
+            rhyming_obs[len(lines)] = obs  # store last word to rhyme with later
             lines.append(line)
             line = []
         emission = '\n'.join(' '.join(line) for line in lines)
-        return emission[1:]
+        return emission
 
 
 datafile = 'shakespeare'
@@ -170,6 +175,7 @@ Xmap, X, Y = pickle.load(open('Xm.X.Y_' + datafile + '.pkl', 'rb'))
 
 supervised_model = Supervised(Xmap, X, Y)
 supervised_model.supervised_learning()
-print('emission:\n', supervised_model.generate_emission())
+for i in range(0, 3):
+    print(supervised_model.generate_emission())
 
 
