@@ -17,7 +17,7 @@ for datafile in ['shakespeare', 'spenser']:
         # remove lines shorter than 3 words
         if len(words) < 3:
         	continue
-        # remove weird characters
+        # remove wierd characters
         words = [word for word in words if word not in 
             [',', ':', '.', ';', '!', '?', ')', '(', "'", "'s"]]
         #iambic = [(w % 2) for w, word in enumerate(words)]
