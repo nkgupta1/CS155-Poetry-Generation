@@ -15,6 +15,45 @@ class Utility:
         pass
 
     @staticmethod
+    def load_sequence(n):
+        '''
+        Load the file 'sequence_data<n>.txt' for a given n.
+
+        Arguments:
+            n:          Sequence index.
+
+        Returns:
+            A:          The transition matrix.
+            O:          The observation matrix.
+            seqs:       Input sequences.
+        '''
+        A = []
+        O = []
+        seqs = []
+
+        # For each file:
+        with open("data/sequence_data{}.txt".format(n)) as f:
+            # Read the parameters.
+            L, D = [int(x) for x in f.readline().strip().split('\t')]
+
+            # Read the transition matrix.
+            for i in range(L):
+                A.append([float(x) for x in f.readline().strip().split('\t')])
+
+            # Read the observation matrix.
+            for i in range(L):
+                O.append([float(x) for x in f.readline().strip().split('\t')])
+
+            # The rest of the file consists of sequences.
+            while True:
+                seq = f.readline().strip()
+                if seq == '':
+                    break
+                seqs.append([int(x) for x in seq])
+
+        return A, O, seqs
+
+    @staticmethod
     def load_ron():
         '''
         Loads the file 'ron.txt'.
@@ -34,7 +73,7 @@ class Utility:
         mood_counter = 0
         genre_counter = 0
 
-        with open("ron.txt") as f:
+        with open("data/ron.txt") as f:
             mood_seq = []
             genre_seq = []
 
@@ -84,4 +123,5 @@ class Utility:
             genre_map:  A hash map that maps each observation to an integer.
         '''
         moods, mood_map, genres, genre_map = Utility.load_ron()
+
         return genres, genre_map
