@@ -3,21 +3,35 @@ import re
 import numpy as np
 import pickle
 
-
+'''
+pre-processes datafile using saved pickled file 'Xm.X.Y_****' 
+to create cached rhyme_mat** and syllable** objects that 
+contain a matrix of word to word rhmying probability (0 or 1) 
+and a list of syllables counts for all words. follows the 
+format of X and the words in Xm to create these objects.
+'''
 
 # We did not write rhyme() and sylco(). It was found online courtesy of 
 # http://eayd.in/?p=232
-
 def rhyme(inp, level=3):
-     entries = nltk.corpus.cmudict.entries()
-     syllables = [(word, syl) for word, syl in entries if word == inp]
-     rhymes = []
-     for (word, syllable) in syllables:
+    '''
+    param inp: str: string to find rhymes of
+    param level: int: strictness of rhyming. 3 looks good. 2 is reasonable for ML.
+    return: set(strs): set of rhymes belonging to inp
+    '''
+    entries = nltk.corpus.cmudict.entries()
+    syllables = [(word, syl) for word, syl in entries if word == inp]
+    rhymes = []
+    for (word, syllable) in syllables:
         rhymes += [word for word, pron in entries if pron[-level:] == syllable[-level:]]
-     return set(rhymes)
+    return set(rhymes)
 
 
 def sylco(word):
+    '''
+    param word: str: word to find number of syllables of
+    return: int: number of syllables in word
+    '''
     word = word.lower()
  
     # exception_add are words that need extra syllables
@@ -145,59 +159,83 @@ def sylco(word):
 
 
 def check_rhyming(datafile='shakespeare', level=1):
+    ''' (deprecated)
+    param datafile: str: name of datafile to use
+    return none: allows user to verify the rhyming process of make_rhyming()
+    '''
+    # open datafile
     with open('../data/' + datafile + '.txt') as f:
         lines = f.readlines()
+    # reformat lines by removing wierd characters and short lines
     new_lines = []
     for l, line in enumerate(lines[:50]):
-        # print(line)
+        # convert line to list of words
         words = nltk.word_tokenize(line.lower())
         # remove lines shorter than 3 words
         if len(words) < 3:
             continue
+        # remove wierd characters
         words = [word for word in words if word not in 
             [',', ':', '.', ';', '!', '?', ')', '(', "'", "'s"]]
         new_lines.append(words)
 
-    #for l, line in enumerate(new_lines):
-    #    print((l % 14), 'num_s:', sum(sylco(w) for w in line), line)
+    # print stanza rhyming process
+    for i1, i2 in [[0, 2], [1, 3], [4, 6], [5, 7], [8, 10], [9, 11], [12, 13]]:
+        w1, w2 = new_lines[i1][-1], new_lines[i2][-1]
+        print('rhymes', w1, w2,('yes' if w1 in rhyme(w2, level) else 'no'))
 
-    for s in range(0, 3):
-        for i1, i2 in [[0, 2], [1, 3], [4, 6], [5, 7], [8, 10], [9, 11], [12, 13]]:
-            w1, w2 = new_lines[i1][-1], new_lines[i2][-1]
-            print('rhymes', w1, w2,('yes' if w1 in rhyme(w2, level) else 'no'))
-
-def make_rhyming(datafile='shakespeare'):
-    Xmap, X, Y = pickle.load(open('Xm.X.Y_' + datafile + '.pkl', 'rb'))
+def make_rhyming(datafile='shakespeare', strength=2):
+    '''
+    param datafile: str: name of datafile to use
+    param strength: int: strength of rhyming matrix to use. correlates to 
+    strictness of what is considered a rhyme.
+    return: none: creates and saves rhyming matrix as for use by super2.py
+    '''
+    Xmap, X, Y = pickle.load(open('cache/Xm.X.Y_' + datafile + '.pkl', 'rb'))
     size = len(set(X))
-    print('size', size)
+    # create matrix that maps observations (nums) to observations (nums) 
     rhyme_mat = np.zeros((size, size), dtype=np.uint8)
+    # for every pair of observations value in matrix as 1 if they rhyme
     for d1 in range(0, size):
-        d1_rhymes = set(rhyme(Xmap[d1], 2))
+        d1_rhymes = set(rhyme(Xmap[d1], strength)) # set has O(1) lookup
         print('processing %d/%d' % (d1, size))
-        for d2 in range(0, d1):
+        for d2 in range(0, d1): # to d1: don't process duplicate pairs or itself
             rhyme_mat[d1, d2] = (1 if Xmap[d2] in d1_rhymes else 0)
-    rhyme_mat += rhyme_mat.T
+    rhyme_mat += rhyme_mat.T  # add transpose to fill in duplicate pairs
     
-    with open('2rhyme_mat' + str(size) + datafile + '.pkl', 'wb') as f:
+    # save rhyme matrix using pickle
+    prefix = '2' if strength == 2 else ''
+    with open('cache/' + prefix + 'rhyme_mat_' + datafile + '.pkl', 'wb') as f:
         pickle.dump(rhyme_mat, f, pickle.HIGHEST_PROTOCOL)
     return rhyme_mat
 
 def analyze_rhyming(datafile='shakespeare'):
-    rhyme_mat = pickle.load(open('rhyme_mat3147' + datafile + '.pkl', 'rb'))
+    '''
+    param datafile: str: name of datafile to use
+    return: none: verifies make_rhyming() by printing number of rhymes per 
+    word and total number of rhymes for all words.
+    '''
+    rhyme_mat = pickle.load(open('cache/rhyme_mat_' + datafile + '.pkl', 'rb'))
     for row in rhyme_mat:
-        print('num rhmyes for word:', np.sum(row))
+        print('num rhymes for word:', np.sum(row))
     print('total num pairs rhymes:', np.sum(rhyme_mat) // 2)
 
 def make_syllables(datafile='shakespeare'):
-    Xmap, X, Y = pickle.load(open('Xm.X.Y_' + datafile + '.pkl', 'rb'))
+    '''
+    param datafile: str: name of datafile to use
+    return syllables: list[int]: list of number of syllables for every word 
+    in X. has the length of X. it is saved/pickled.
+    '''
+    Xmap, X, Y = pickle.load(open('cache/Xm.X.Y_' + datafile + '.pkl', 'rb'))
     syllables = []
     size = len(set(X))
     for d in range(0, size):
-        syllables.append(sylco(Xmap[d]))
-    with open('syllables' + str(size) + datafile + '.pkl', 'wb') as f:
+        syllables.append(sylco(Xmap[d]))  # use sylco to get number of syllables
+    # save list using pickle
+    with open('cache/syllables_' + datafile + '.pkl', 'wb') as f:
         pickle.dump(np.array(syllables), f, pickle.HIGHEST_PROTOCOL)
     return syllables
 
 
-make_rhyming()
+
 
