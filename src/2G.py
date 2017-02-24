@@ -6,21 +6,23 @@
 # Description:  Set 5
 ########################################
 
-from HMM import unsupervised_HMM
+from HMM import supervised_HMM
 from Utility import Utility
 
-def unsupervised_learning(n_states, n_iters):
+def supervised_learning():
     '''
     Trains an HMM using supervised learning on the file 'ron.txt' and
     prints the results.
-
-    Arguments:
-        n_states:   Number of hidden states that the HMM should have.
     '''
-    genres, genre_map = Utility.load_ron_hidden()
+    moods, mood_map, genres, genre_map = Utility.load_ron()
+
+    print('moods', len(moods), moods[:10])
+    print('mood_map', len(mood_map), mood_map[:10])
+    print('genres', len(genres), genres[:10])
+    print('genre_map', len(genre_map), genre_map[:10])
 
     # Train the HMM.
-    HMM = unsupervised_HMM(genres, n_states, n_iters)
+    HMM = supervised_HMM(genres, moods)
 
     # Print the transition matrix.
     print("Transition Matrix:")
@@ -42,9 +44,9 @@ if __name__ == '__main__':
     print('')
     print('')
     print('#' * 70)
-    print("{:^70}".format("Running Code For Question 2H"))
+    print("{:^70}".format("Running Code For Question 2G"))
     print('#' * 70)
     print('')
     print('')
 
-    unsupervised_learning(4, 10)
+    supervised_learning()

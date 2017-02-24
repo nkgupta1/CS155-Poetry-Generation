@@ -6,6 +6,8 @@
 # Description:  Set 5
 ########################################
 
+import string
+
 class Utility:
     '''
     Utility for the problem files.
@@ -15,113 +17,46 @@ class Utility:
         pass
 
     @staticmethod
-    def load_sequence(n):
+    def load(filename):
         '''
-        Load the file 'sequence_data<n>.txt' for a given n.
-
-        Arguments:
-            n:          Sequence index.
-
         Returns:
-            A:          The transition matrix.
-            O:          The observation matrix.
-            seqs:       Input sequences.
+            observations:   Sequences of observations, i.e. a list of lists.
+                            Each entry is a line
+            obs_map:        A hash map that maps each observation to a word
         '''
-        A = []
-        O = []
-        seqs = []
 
-        # For each file:
-        with open("data/sequence_data{}.txt".format(n)) as f:
-            # Read the parameters.
-            L, D = [int(x) for x in f.readline().strip().split('\t')]
+        # keeps track of the observations parsed
+        observations = []
+        # maps words to observations
+        word_map = {}
+        # keeps a count of how many words we have seen
+        observation_counter = 0
 
-            # Read the transition matrix.
-            for i in range(L):
-                A.append([float(x) for x in f.readline().strip().split('\t')])
+        with open(filename) as f:
+            for line in f:
+                line = line.strip()
 
-            # Read the observation matrix.
-            for i in range(L):
-                O.append([float(x) for x in f.readline().strip().split('\t')])
-
-            # The rest of the file consists of sequences.
-            while True:
-                seq = f.readline().strip()
-                if seq == '':
-                    break
-                seqs.append([int(x) for x in seq])
-
-        return A, O, seqs
-
-    @staticmethod
-    def load_ron():
-        '''
-        Loads the file 'ron.txt'.
-
-        Returns:
-            moods:      Sequnces of states, i.e. a list of lists.
-                        Each sequence represents half a year of data.
-            mood_map:   A hash map that maps each state to an integer.
-            genres:     Sequences of observations, i.e. a list of lists.
-                        Each sequence represents half a year of data.
-            genre_map:  A hash map that maps each observation to an integer.
-        '''
-        moods = []
-        mood_map = {}
-        genres = []
-        genre_map = {}
-        mood_counter = 0
-        genre_counter = 0
-
-        with open("data/ron.txt") as f:
-            mood_seq = []
-            genre_seq = []
-
-            while True:
-                line = f.readline().strip()
-
-                if line == '' or line == '-':
-                    # A half year has passed. Add the current sequence to
-                    # the list of sequences.
-                    moods.append(mood_seq)
-                    genres.append(genre_seq)
-                    # Start new sequences.
-                    mood_seq = []
-                    genre_seq = []
-                
-                if line == '':
-                    break
-                elif line == '-':
+                if line == '' or line.isdigit():
                     continue
-                
-                mood, genre = line.split()
-                
-                # Add new moods to the mood state hash map.
-                if mood not in mood_map:
-                    mood_map[mood] = mood_counter
-                    mood_counter += 1
 
-                mood_seq.append(mood_map[mood])
+                line = ''.join(l for l in line if l not in string.punctuation)
 
-                # Add new genres to the genre observation hash map.
-                if genre not in genre_map:
-                    genre_map[genre] = genre_counter
-                    genre_counter += 1
+                word_seq = line.split()
 
-                # Convert the genre into an integer.
-                genre_seq.append(genre_map[genre])
+                for word in word_seq:
+                    if word not in word_map:
+                        word_map[word] = observation_counter
+                        observation_counter += 1
 
-        return moods, mood_map, genres, genre_map
+                observation_seq = []
 
-    @staticmethod
-    def load_ron_hidden():
-        '''
-        Loads the file 'ron.txt' and hides the states.
+                for word in word_seq:
+                    observation_seq.append(word_map[word])
 
-        Returns:
-            genres:     The observations.
-            genre_map:  A hash map that maps each observation to an integer.
-        '''
-        moods, mood_map, genres, genre_map = Utility.load_ron()
+                observations.append(observation_seq)
 
-        return genres, genre_map
+        # map an observation to a word
+        obs_map = {v: k for k, v in word_map.items()}
+
+
+        return observations, obs_map
