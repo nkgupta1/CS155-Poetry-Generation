@@ -3,10 +3,10 @@
 Recurrent Neural Network on sonnets.
 """
 
-import keras
 import sys
 import numpy as np
-from keras.models import Sequential
+
+from keras.models import Sequential, load_model
 from keras.layers.core import Dense, Dropout
 from keras.layers.recurrent import LSTM #rnn
 from keras.callbacks import ModelCheckpoint
@@ -55,20 +55,15 @@ X = X / len(char_to_int)
 # make one hot vector for the output
 Y = np_utils.to_categorical(Y)
 
-# RNN Network
-model = Sequential()
-model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), consume_less='cpu', unroll=True))
-model.add(Dropout(0.2))
-# model.add(LSTM(128, return_sequences=False, consume_less='cpu'))
-# model.add(Dropout(0.2))
-model.add(Dense(Y.shape[1], activation='softmax'))
-
-
-# model.summary()
-
-# save model progress
-
 if train_model:
+    # RNN Network
+    model = Sequential()
+    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), consume_less='cpu', unroll=True))
+    model.add(Dropout(0.2))
+    # model.add(LSTM(128, return_sequences=False, consume_less='cpu'))
+    # model.add(Dropout(0.2))
+    model.add(Dense(Y.shape[1], activation='softmax'))
+
     filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
@@ -78,7 +73,7 @@ if train_model:
 
 if generate:
     filename = 'models/rnn-19-2.4038.hdf5'
-    model.load_weights(filename)
+    model = load_model(filename)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # pick a random seed
