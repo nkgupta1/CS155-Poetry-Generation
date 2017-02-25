@@ -10,7 +10,10 @@ def load_pos():
     Returns:
         observations:   Sequences of observations, i.e. a list of lists.
                         Each entry is a line
+        parts_of_speed: states for each of the observation based on parts of 
+                        speed
         obs_map:        A hash map that maps each observation to a word
+        pos_map:        maps the state to its part of speech description
     '''
 
     # keeps track of the observations parsed
@@ -18,14 +21,14 @@ def load_pos():
     # maps words to observations
     word_map = {}
     # keeps a count of how many words we have seen
-    observation_counter = 0
+    observation_counter = 1
 
     # keeps track of parts of speech parsed
     parts_of_speech = []
     # part of speech map
     pos_map = {}
     # keeps a count of how many parts of speech we have seen
-    pos_counter = 0
+    pos_counter = 1
 
     with open('../data/shakespeare.txt') as f:
         for line in f:
@@ -63,6 +66,8 @@ def load_pos():
 
     # map an observation to a word
     obs_map = {v: k for k, v in word_map.items()}
+    # map a state to a part of speed
+    pos_map = {v: k for k, v in pos_map.items()}
 
 
-    return observations, parts_of_speech, obs_map
+    return observations, parts_of_speech, obs_map, pos_map
