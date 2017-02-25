@@ -3,9 +3,10 @@
 Recurrent Neural Network on sonnets.
 """
 
-import keras
+import sys
 import numpy as np
-from keras.models import Sequential
+
+from keras.models import Sequential, load_model
 from keras.layers.core import Dense, Dropout
 from keras.layers.recurrent import LSTM #rnn
 from keras.callbacks import ModelCheckpoint
@@ -32,8 +33,10 @@ def load():
     return text, char_to_int, int_to_char
 
 seq_length = 40
-X = []
+dataX = []
 Y = []
+train_model = False
+generate = True
 
 text, char_to_int, int_to_char = load()
 
@@ -41,39 +44,66 @@ text, char_to_int, int_to_char = load()
 for i in range(len(text) - seq_length):
     seq_in = text[i:i + seq_length]
     seq_out = text[i+seq_length]
-    X.append([char_to_int[c] for c in seq_in])
+    dataX.append([char_to_int[c] for c in seq_in])
     Y.append(char_to_int[seq_out])
 
 # reshape for keras
-X = np.reshape(X, (len(X), seq_length, 1))
+X = np.reshape(dataX, (len(dataX), seq_length, 1))
 # normalize
 X = X / len(char_to_int)
 
 # make one hot vector for the output
 Y = np_utils.to_categorical(Y)
 
-# RNN Network
-model = Sequential()
-model.add(LSTM(1024, input_shape=(X.shape[1], X.shape[2]), return_sequences=True, consume_less='cpu', unroll=True))
-model.add(Dropout(0.2))
-model.add(LSTM(256, return_sequences=True, consume_less='cpu', unroll=True))
-model.add(Dropout(0.2))
-model.add(LSTM(64, return_sequences=False, consume_less='cpu', unroll=True))
-model.add(Dropout(0.2))
-model.add(Dense(Y.shape[1], activation='softmax'))
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-model.summary()
-
-# save model progress
-filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
-checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, period=5, 
-    save_best_only=True, mode='min')
-callbacks_list = [checkpoint]
-
-print(X.shape)
 # fit the model
 model.fit(X, Y, nb_epoch=100, batch_size=128, callbacks=callbacks_list)
+if train_model:
+    # RNN Network
+    model = Sequential()
+    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), consume_less='cpu', unroll=True))
+    model.add(Dropout(0.2))
+    # model.add(LSTM(128, return_sequences=False, consume_less='cpu'))
+    # model.add(Dropout(0.2))
+    model.add(Dense(Y.shape[1], activation='softmax'))
+
+    filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    callbacks_list = [checkpoint]
+    # fit the model
+    model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+
+if generate:
+    filename = 'models/rnn-19-2.4038.hdf5'
+    model = load_model(filename)
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    # pick a random seed
+    pattern = dataX[np.random.randint(0, len(dataX) - 1)]
+    print("Seed:", "".join([int_to_char[i] for i in pattern]))
+    print('-'*80)
+    newline_count = 0
+
+    while True:
+        # shape for rnn
+        x = np.reshape(pattern, (1, len(pattern), 1))
+        x = x / len(int_to_char)
+        # get generated character and convert to character
+        prediction = model.predict(x, verbose=0)
+        ind = np.argmax(prediction)
+        result = int_to_char[ind]
+        # print out the character
+        sys.stdout.write(result)
+
+        if result == '\n':
+            newline_count += 1
+        if newline_count == 15:
+            break
+            
+        # update the input pattern
+        pattern.append(ind)
+        pattern = pattern[1:]
+
 
 #model.save('final_model_epochs.h5')
