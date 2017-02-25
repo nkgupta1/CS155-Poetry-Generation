@@ -80,27 +80,30 @@ if generate:
     filename = 'models/rnn-19-2.4038.hdf5'
     model.load_weights(filename)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
     # pick a random seed
     pattern = dataX[np.random.randint(0, len(dataX) - 1)]
     print("Seed:", "".join([int_to_char[i] for i in pattern]))
+    print('-'*80)
     newline_count = 0
+
     while True:
+        # shape for rnn
         x = np.reshape(pattern, (1, len(pattern), 1))
         x = x / len(int_to_char)
+        # get generated character and convert to character
         prediction = model.predict(x, verbose=0)
-        # print(prediction.shape)
-        # print(prediction)
         ind = np.argmax(prediction)
-        # print(ind)
         result = int_to_char[ind]
+        # print out the character
         sys.stdout.write(result)
 
         if result == '\n':
             newline_count += 1
         if newline_count == 15:
             break
-        # if newline_count > 0:
             
+        # update the input pattern
         pattern.append(ind)
         pattern = pattern[1:]
 
