@@ -56,6 +56,9 @@ X = X / len(char_to_int)
 # make one hot vector for the output
 Y = np_utils.to_categorical(Y)
 
+
+# fit the model
+model.fit(X, Y, nb_epoch=100, batch_size=128, callbacks=callbacks_list)
 if train_model:
     # RNN Network
     model = Sequential()
@@ -117,3 +120,4 @@ if generate:
         pattern = pattern[1:]
 
 
+#model.save('final_model_epochs.h5')
