@@ -3,7 +3,6 @@
 Recurrent Neural Network on sonnets.
 """
 
-import sys
 import numpy as np
 
 from keras.models import Sequential, load_model
@@ -36,8 +35,8 @@ seq_length = 40
 dataX = []
 Y = []
 train_model = False
-generate = False
-resume_training = True
+generate = True
+resume_training = False
 
 text, char_to_int, int_to_char = load()
 
@@ -58,7 +57,6 @@ Y = np_utils.to_categorical(Y)
 
 
 # fit the model
-model.fit(X, Y, nb_epoch=100, batch_size=128, callbacks=callbacks_list)
 if train_model:
     # RNN Network
     model = Sequential()
@@ -89,7 +87,7 @@ if resume_training:
     model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
 
 if generate:
-    filename = 'models/veb2.hdf5'
+    filename = 'models/rnn-128x128-02-2.0459.hdf5'
     model = load_model(filename)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
@@ -108,7 +106,7 @@ if generate:
         ind = np.argmax(prediction)
         result = int_to_char[ind]
         # print out the character
-        sys.stdout.write(result)
+        print(result, flush=True, end='')
 
         if result == '\n':
             newline_count += 1
