@@ -54,9 +54,11 @@ Y = np_utils.to_categorical(Y)
 
 # RNN Network
 model = Sequential()
-model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), return_sequences=True, consume_less='cpu', unroll=True))
+model.add(LSTM(1024, input_shape=(X.shape[1], X.shape[2]), return_sequences=True, consume_less='cpu', unroll=True))
 model.add(Dropout(0.2))
-model.add(LSTM(128, return_sequences=False, consume_less='cpu', unroll=True))
+model.add(LSTM(256, return_sequences=True, consume_less='cpu', unroll=True))
+model.add(Dropout(0.2))
+model.add(LSTM(64, return_sequences=False, consume_less='cpu', unroll=True))
 model.add(Dropout(0.2))
 model.add(Dense(Y.shape[1], activation='softmax'))
 
@@ -66,10 +68,12 @@ model.summary()
 
 # save model progress
 filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
-checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, period=5, 
+    save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
 print(X.shape)
 # fit the model
-model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+model.fit(X, Y, nb_epoch=100, batch_size=128, callbacks=callbacks_list)
 
+#model.save('final_model_epochs.h5')
