@@ -34,7 +34,7 @@ def sequence_generator(HMM, obs_map, n, l, w):
         HMM:        Trained HMM.
         n:          Number of poems to generate.
         l:          Number of lines in each poem.
-        w:          Number of words in each poem.
+        w:          Number of words in each lines.
     '''
     print()
     print()
