@@ -1,0 +1,394 @@
+5 Hidden States:
+
+For state 1, the most common words are: 
+doth, Noun, 1
+nor, Conj, 1
+is, Verb, 1
+thy, Noun, 1
+no, Adj, 1
+which, Adj, 1
+but, Conj, 1
+and, Conj, 1
+to, Prep, 1
+that, Conj, 1
+
+For state 2, the most common words are: 
+it, Pronoun, 1
+i, Noun, 1
+not, Adverb, 1
+me, Pronoun, 1
+is, Verb, 1
+that, Conj, 1
+with, Conj, 1
+thy, Noun, 1
+thou, Noun, 1
+to, Prep, 1
+
+For state 3, the most common words are: 
+the, Adj, 1
+as, Conj, 1
+when, Adverb, 1
+what, Pronoun, 1
+if, Conj, 1
+that, Conj, 1
+so, Adverb, 1
+for, Conj, 1
+of, Conj, 1
+in, Conj, 1
+
+For state 4, the most common words are: 
+me, Pronoun, 1
+o, Noun, 1
+for, Conj, 1
+art, Noun, 1
+thee, Noun, 0
+his, Pronoun, 1
+i, Noun, 1
+self, Noun, 1
+love, Noun, 1
+be, Verb, 1
+
+For state 5, the most common words are: 
+as, Conj, 1
+doth, Noun, 1
+have, Verb, 1
+do, Verb, 1
+by, Conj, 1
+and, Conj, 1
+a, Adj, 1
+in, Conj, 1
+i, Noun, 1
+the, Adj, 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 Hidden States:
+
+For state 1, the most common words are: 
+therefore, Adverb, 3
+without, Conj, 2
+as, Conj, 1
+against, Conj, 2
+how, Adverb, 1
+since, Conj, 1
+or, Conj, 1
+for, Conj, 1
+o, Noun, 1
+but, Conj, 1
+
+For state 2, the most common words are: 
+that, Conj, 1
+heart, Noun, 1
+world, Noun, 1
+then, Adverb, 1
+all, Adj, 1
+eye, Noun, 1
+eyes, Noun, 1
+his, Pronoun, 1
+self, Noun, 1
+love, Noun, 1
+
+For state 3, the most common words are: 
+for, Conj, 1
+by, Conj, 1
+with, Conj, 1
+all, Adj, 1
+that, Conj, 1
+is, Verb, 1
+to, Prep, 1
+be, Verb, 1
+not, Adverb, 1
+of, Conj, 1
+
+For state 4, the most common words are: 
+of, Conj, 1
+it, Pronoun, 1
+am, Verb, 1
+as, Conj, 1
+can, Adverb, 1
+will, Adverb, 1
+shall, Adverb, 1
+have, Verb, 1
+do, Verb, 1
+is, Verb, 1
+
+For state 5, the most common words are: 
+your, Pronoun, 1
+still, Adverb, 1
+all, Adj, 1
+with, Conj, 1
+thee, Noun, 0
+his, Pronoun, 1
+and, Conj, 1
+doth, Noun, 1
+in, Conj, 1
+a, Adj, 1
+
+For state 6, the most common words are: 
+but, Conj, 1
+so, Adverb, 1
+and, Conj, 1
+what, Pronoun, 1
+yet, Adverb, 1
+as, Conj, 1
+then, Adverb, 1
+that, Conj, 1
+if, Conj, 1
+for, Conj, 1
+
+For state 7, the most common words are: 
+hath, Noun, 1
+or, Conj, 1
+mine, Noun, 1
+of, Conj, 1
+that, Conj, 1
+and, Conj, 1
+my, Pronoun, 1
+with, Conj, 1
+thy, Noun, 1
+the, Adj, 1
+
+For state 8, the most common words are: 
+on, Conj, 1
+to, Prep, 1
+their, Pronoun, 1
+this, Adj, 1
+me, Pronoun, 1
+your, Pronoun, 1
+so, Adverb, 1
+thou, Noun, 1
+thy, Noun, 1
+my, Pronoun, 1
+
+For state 9, the most common words are: 
+thee, Noun, 0
+beauty, Noun, 2
+than, Conj, 1
+self, Noun, 1
+heart, Noun, 1
+a, Adj, 1
+own, Adj, 1
+my, Pronoun, 1
+sweet, Noun, 1
+love, Noun, 1
+
+For state 10, the most common words are: 
+they, Pronoun, 1
+but, Conj, 1
+thee, Noun, 0
+so, Adverb, 1
+to, Prep, 1
+not, Adverb, 1
+you, Pronoun, 1
+it, Pronoun, 1
+thou, Noun, 1
+and, Conj, 1
+
+
+
+
+
+
+
+
+For 15 Hidden States:
+
+For state 1, the most common words are: 
+live, Adj, 1
+still, Adverb, 1
+as, Conj, 1
+for, Conj, 1
+give, Verb, 1
+it, Pronoun, 1
+make, Verb, 1
+in, Conj, 1
+which, Adj, 1
+be, Verb, 1
+
+For state 2, the most common words are: 
+may, Adverb, 1
+hath, Noun, 1
+is, Verb, 1
+some, Adj, 1
+will, Adverb, 1
+shall, Adverb, 1
+that, Conj, 1
+be, Verb, 1
+his, Pronoun, 1
+doth, Noun, 1
+
+For state 3, the most common words are: 
+he, Pronoun, 1
+never, Adverb, 2
+have, Verb, 1
+time, Noun, 1
+thou, Noun, 1
+which, Adj, 1
+it, Pronoun, 1
+is, Verb, 1
+not, Adverb, 1
+i, Noun, 1
+
+For state 4, the most common words are: 
+should, Adverb, 1
+when, Adverb, 1
+shall, Adverb, 1
+sweet, Noun, 1
+if, Conj, 1
+might, Adverb, 1
+which, Adj, 1
+did, Verb, 1
+beauty, Noun, 2
+are, Verb, 1
+
+For state 5, the most common words are: 
+it, Pronoun, 1
+thing, Noun, 1
+day, Noun, 1
+truth, Noun, 1
+this, Adj, 1
+thee, Noun, 0
+him, Pronoun, 1
+not, Adverb, 1
+time, Noun, 1
+more, Adverb, 1
+
+For state 6, the most common words are: 
+though, Conj, 1
+which, Adj, 1
+where, Adverb, 1
+for, Conj, 1
+than, Conj, 1
+o, Noun, 1
+so, Adverb, 1
+or, Conj, 1
+but, Conj, 1
+that, Conj, 1
+
+For state 7, the most common words are: 
+o, Noun, 1
+whose, Pronoun, 1
+then, Adverb, 1
+which, Adj, 1
+no, Adj, 1
+let, Verb, 1
+from, Conj, 1
+nor, Conj, 1
+and, Conj, 1
+for, Conj, 1
+
+For state 8, the most common words are: 
+will, Adverb, 1
+to, Prep, 1
+sweet, Noun, 1
+eye, Noun, 1
+own, Adj, 1
+eyes, Noun, 1
+heart, Noun, 1
+in, Conj, 1
+self, Noun, 1
+love, Noun, 1
+
+For state 9, the most common words are: 
+o, Noun, 1
+i, Noun, 1
+look, Noun, 1
+you, Pronoun, 1
+who, Pronoun, 1
+he, Pronoun, 1
+how, Adverb, 1
+then, Adverb, 1
+yet, Adverb, 1
+when, Adverb, 1
+
+For state 10, the most common words are: 
+his, Pronoun, 1
+true, Adj, 0
+thee, Noun, 0
+have, Verb, 1
+i, Noun, 1
+thine, Noun, 1
+their, Pronoun, 1
+mine, Noun, 1
+your, Pronoun, 1
+thy, Noun, 1
+
+For state 11, the most common words are: 
+why, Adverb, 1
+with, Conj, 1
+then, Adverb, 1
+yet, Adverb, 1
+not, Adverb, 1
+so, Adverb, 1
+they, Pronoun, 1
+you, Pronoun, 1
+but, Conj, 1
+i, Noun, 1
+
+For state 12, the most common words are: 
+so, Adverb, 1
+what, Pronoun, 1
+love, Noun, 1
+if, Conj, 1
+when, Adverb, 1
+not, Adverb, 1
+art, Noun, 1
+have, Verb, 1
+do, Verb, 1
+as, Conj, 1
+
+For state 13, the most common words are: 
+you, Pronoun, 1
+his, Pronoun, 1
+their, Pronoun, 1
+no, Adj, 1
+such, Adj, 1
+that, Conj, 1
+this, Adj, 1
+me, Pronoun, 1
+a, Adj, 1
+thee, Noun, 0
+
+For state 14, the most common words are: 
+that, Conj, 1
+this, Adj, 1
+from, Conj, 1
+for, Conj, 1
+on, Conj, 1
+by, Conj, 1
+of, Conj, 1
+with, Conj, 1
+all, Adj, 1
+to, Prep, 1
+
+For state 15, the most common words are: 
+for, Conj, 1
+than, Conj, 1
+one, Noun, 1
+or, Conj, 1
+but, Conj, 1
+world, Noun, 1
+is, Verb, 1
+as, Conj, 1
+so, Adverb, 1
+a, Adj, 1
+
+
+
+
+
+
+
+
+For 20 Hidden States
