@@ -91,7 +91,38 @@ state any common features these groups.}
 \medskip
 
 \subsection{What did you use to collect more data and what packages did you use for RNN/LSTM?}
+We used both the data sets, Shakespeare and Spenser. We did not any data in addition to these two sets of data. We used Keras with a TensorFlow backend for the RNN/LSTM.
 \subsection{Compare/contrast the effect of these algorithms to HMM and why you think they were better or worse}
+The RNN was much more finicky than the HMM was in that it was much more sensitive to parameters than the HMM was. In particular, if a network was under trained, all it did was output a single word, usually \texttt{the}. The three main parameters we varied over the different networks was the architecture (we tried 64x32, 128x64, 128x128, 256x128, 256x256, 1024x256), the number of iterations of training (the optimal number varied based on the network architecture), and the input sequence length. If the network was over trained, it usually repeated a short phrase or just memorized passages from the original text. As such, there was a very small range where the network generated a novel, potentially good output. Furthermore, smaller networks just repeated the same short phrase over and over again while the larger networks just repeated larger phrases if not just memorizing full passages from the data set. \\
+\indent We believe the reason that we had more success with the HMM is that in general, RNNs are difficult to train, especially on the limited quantity of data that we had. Neural networks in general require a large amount of data to train since they have many parameters. To combat this, we limited the depth of the network, and therefore the number of parameters which meant we were limiting the power of the RNN. While RNNs have much more potential, the data set was too small to train a good model. As such, HMMs were better on the smaller data set, even though they do not have as much potential as a RNN because they can only look one state back. The RNN took much longer to train than the HMM (1.5 minutes per iteration on average vs. 10 seconds per iteration) . \\
+\indent We fed input into the network character by character in order to reduce the input size. We made all characters lowercase to further reduce input. We trained the RNN in an unsupervised manner. In order to generate output, we seeded the model with sequence of characters selected from the sonnets, which when fed into the network, generated the next character. We appended this character to the input sequence, removing one of the other characters and fed it back into the network, repeating until we got a poem of the desired length. \\
+\indent Here is an example of an excerpt generated from a model that was overfit to the data (architecture of 1024x256 trained for 150 iterations): \\
+\texttt{
+    i move to hear her speak, \\
+    yet well i know, \\
+    that music hath a far more pleasing sound: \\
+    i grant i never saw a goddess go, \\
+    my mistress when she walks treads on the ground. \\
+    and yet by heaven i think my love as lare \\
+} \\
+which is just a copy of Shakespeare's sonnet 130. One of the more successful generations we got is the following, generated with 1024x256 with 20 iterations: \\
+\texttt{
+    That love in move that I am stained, \\
+    And thet in thee art shat I have seen she torld and hr thee, \\
+    And therefore hand that thou aestaintance, \\
+    And thet in thee I say tort the eane, \\
+    So shall thou that which I have steared, \\
+    The have the len of mort of thine eyes, \\
+    And in the world with shale the love, \\
+    Oo marker then thou art as the world and wouth, \\
+    And in the world would may still so more, \\
+    And yours toue love wou are io heaven shall stay, \\
+    Which in their sarte of think the soues, \\
+    And therefore hand that thou aestaintance, \\
+    And thet in thee I say tort the eane, \\
+    So shall thou that which I have steared, \\
+    The have the len of mort of thine eyes. \\
+}
 
 
 \section{Conclusion}
