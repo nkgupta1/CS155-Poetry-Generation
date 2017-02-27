@@ -76,17 +76,32 @@ For visualization purposes, three models (one each with 5, 10, and 15 hidden sta
 
 \medskip
 
-% \subsection{For at least 5 hidden \textbf{States give a list of the top 10 words that associate with this hidden \textbf{State and \textbf{State any common features these groups.}
+% \subsection{For at least 5 hidden states give a list of the top 10 words that associate with this hidden state and state any common features these groups.}
 \subsection{Top Words Associated with each state}
 For a list of the most common words associated with each state, please see Appendix A.\\
 
-For the simplest model (5 hidden states), all words are one syllable. Many are repeated between lists, and in particular there appears to be little specialization between states. For the larger model, several two syllable words are represented and words are repeated at a lower frequency. Specifically, each word is repeated an average of 1.389 times in the 5 state model, 1.639 times in the 10 state model, and 1.705 times in the 15 state model. Clearly, the more advanced model allows for better specialization of each state.
+For the simplest model (5 hidden states), all words are one syllable. Many are repeated between lists, and in particular there appears to be little specialization between states. For the larger model, several two syllable words are represented and words are repeated at a lower frequency. Specifically, each word is repeated an average of 1.389 times in the 5 state model, 1.639 (< 2 * 1.389) times in the 10 state model, and 1.705 (< 3 * 1.389) times in the 15 state model. Clearly, the more advanced model allows for better specialization of each state.
 
 % \subsection{What are some properties of the different hidden states?}
 % \subsection{e.g. Correlation between hidden states and syllable counts, connotations of words, etc.}
 % \subsection{Make a visual representation of the correlation between states and words}
-\subsection{Interpretatin of Hidden States}
-We consider the possibilities that hidden states learn parts of speech or syllable counts. Our model did not appear to demonstrate iambic pentameter, so we discount the possibility that it learned meter sufficiently well. As above, we analyze HMMs with 5, 10, and 15 hidden states.
+\subsection{Interpretation of Hidden States}
+We consider the possibilities that hidden states learn parts of speech or syllable counts. Our model did not appear to demonstrate iambic pentameter, so we discount the possibility that it learned meter sufficiently well. Graphs are included in Appendices B-E.\\
+
+We first examine how well the models perform at identifying parts of speech. Graphs are included in Appendix B.
+
+We find that the models learn parts of speech quite well. In particular, there is significant specialization amongst states; this trend appears to increase as the number of states rises. As an extreme example, we note that prepositions are only emitted in appreciable quantities in three of the 15 states of our final model. Similar `peaks' are observed for adjectives and pronouns. Nouns are well represented for almost all states in our three models, as should be expected. It is interesting to note that while nouns and conjunctions are both highly represented in the 5 state model (and in the underlying data), they demonstrate disparate behavior for the more complicated models; nouns (at least superficially) are represented more evenly than conjunctions. This differing treatment for differing parts of speech implies that our model is capable of learning grammatical subleties.\\
+
+We next examine how well the models perform at identifying syllable counts. Graphs are included in Appendix C.
+
+We find that the model does not learn to classify words on syllable length very well. In particular, emission rates are nearly identical across the states in the 5 state model. Variations exist for the more complicated models, although they are still fairly insignificant and are likely a side effect of the model learning other factors (namely, parts of speech).\\
+
+We next examine the transition frequencies between different states. These transitions do not explicitly give us information about the meaning of the hidden states, and are presented without further analysis in Appendix D.\\
+
+Finally, we visualize the models as networks. Having concluded that the model most successfully learns parts of speech, we classify nodes by their most ``over-represented'' parts of speech. Specifically, we label nodes by either a.) all parts of speech that it emits at at least half a standard deviation above the mean, or b.) if it emits no part of speech at this frequency, the part of speech that it emits at the highest rate above the mean (measured as the ratio emission frequency / mean). These nodes are connected by directed edges added along high probability state transitions. In particular, a directed edge is added if the transition rate is above the mean; given that most pairs have near 0 probability of transitions, this produces a reasonable number of edges. The graphs are shown in Appendix E.
+In analyzing these graphs, it appears that transitions follow (in most cases) `logical' structure; nouns to verbs, adverbs to verbs, adjectives to nouns, etc. The correlation is not perfect, of course; there are an unusually high number of noun to noun transitions, whereas this pattern is actually quite rare. This is likely a result of generally high emission rates for nouns (i.e., it is hard to transition to a state with low noun emission states), and of misclassification of words. In particular, words such as doth and thy are classified as nouns, while they can be used in other contexts.\\
+
+In conclusion, our HMM has learned patterns in Shakespeare's texts primarily through learning transitions between words, and in particular has developed a rudimentary sense of grammar. We note that this is in part a consequence of how our model was trained; if we had trained syllable by syllable instead, the model would likely have focused on other patterns.\\
 
 \section{Additional Goals}
 \medskip
@@ -146,7 +161,7 @@ The words listed below were generated by training HMMs with 5, 10, and 15 hidden
 
 \section{\textbf{5 States:}}
 
-\textbf{State 1:} \\
+\noindent\textbf{State 1:} \\
 doth, Noun, 1\\
 nor, Conj, 1\\
 is, Verb, 1\\
@@ -158,7 +173,7 @@ and, Conj, 1\\
 to, Prep, 1\\
 that, Conj, 1\\
 \\
-\textbf{State 2:} \\
+\noindent\textbf{State 2:} \\
 it, Pronoun, 1\\
 i, Noun, 1\\
 not, Adverb, 1\\
@@ -170,7 +185,7 @@ thy, Noun, 1\\
 thou, Noun, 1\\
 to, Prep, 1\\
 \\
-\textbf{State 3:} \\
+\noindent\textbf{State 3:} \\
 the, Adj, 1\\
 as, Conj, 1\\
 when, Adverb, 1\\
@@ -182,7 +197,7 @@ for, Conj, 1\\
 of, Conj, 1\\
 in, Conj, 1\\
 \\
-\textbf{State 4:} \\
+\noindent\textbf{State 4:} \\
 me, Pronoun, 1\\
 o, Noun, 1\\
 for, Conj, 1\\
@@ -194,7 +209,7 @@ self, Noun, 1\\
 love, Noun, 1\\
 be, Verb, 1\\
 \\
-\textbf{State 5:} \\
+\noindent\textbf{State 5:} \\
 as, Conj, 1\\
 doth, Noun, 1\\
 have, Verb, 1\\
@@ -204,11 +219,11 @@ and, Conj, 1\\
 a, Adj, 1\\
 in, Conj, 1\\
 i, Noun, 1\\
-the, Adj, 1\\
+the, Adj, 1
 
 \section{\textbf{10 States:}}
 
-\textbf{State 1:}\\
+\noindent\textbf{State 1:}\\
 therefore, Adverb, 3\\
 without, Conj, 2\\
 as, Conj, 1\\
@@ -220,7 +235,7 @@ for, Conj, 1\\
 o, Noun, 1\\
 but, Conj, 1\\
 \\
-\textbf{State 2:} \\
+\noindent\textbf{State 2:} \\
 that, Conj, 1\\
 heart, Noun, 1\\
 world, Noun, 1\\
@@ -232,7 +247,7 @@ his, Pronoun, 1\\
 self, Noun, 1\\
 love, Noun, 1\\
 \\
-\textbf{State 3:} \\
+\noindent\textbf{State 3:} \\
 for, Conj, 1\\
 by, Conj, 1\\
 with, Conj, 1\\
@@ -244,7 +259,7 @@ be, Verb, 1\\
 not, Adverb, 1\\
 of, Conj, 1\\
 \\
-\textbf{State 4:} \\
+\noindent\textbf{State 4:} \\
 of, Conj, 1\\
 it, Pronoun, 1\\
 am, Verb, 1\\
@@ -256,7 +271,7 @@ have, Verb, 1\\
 do, Verb, 1\\
 is, Verb, 1\\
 \\
-\textbf{State 5:} \\
+\noindent\textbf{State 5:} \\
 your, Pronoun, 1\\
 still, Adverb, 1\\
 all, Adj, 1\\
@@ -268,7 +283,7 @@ doth, Noun, 1\\
 in, Conj, 1\\
 a, Adj, 1\\
 \\
-\textbf{State 6:} \\
+\noindent\textbf{State 6:} \\
 but, Conj, 1\\
 so, Adverb, 1\\
 and, Conj, 1\\
@@ -280,7 +295,7 @@ that, Conj, 1\\
 if, Conj, 1\\
 for, Conj, 1\\
 \\
-\textbf{State 7:} \\
+\noindent\textbf{State 7:} \\
 hath, Noun, 1\\
 or, Conj, 1\\
 mine, Noun, 1\\
@@ -292,7 +307,7 @@ with, Conj, 1\\
 thy, Noun, 1\\
 the, Adj, 1\\
 \\
-\textbf{State 8:} \\
+\noindent\textbf{State 8:} \\
 on, Conj, 1\\
 to, Prep, 1\\
 their, Pronoun, 1\\
@@ -304,7 +319,7 @@ thou, Noun, 1\\
 thy, Noun, 1\\
 my, Pronoun, 1\\
 \\
-\textbf{State 9:} \\
+\noindent\textbf{State 9:} \\
 thee, Noun, 0\\
 beauty, Noun, 2\\
 than, Conj, 1\\
@@ -316,7 +331,7 @@ my, Pronoun, 1\\
 sweet, Noun, 1\\
 love, Noun, 1\\
 \\
-\textbf{State 10:} \\
+\noindent\textbf{State 10:} \\
 they, Pronoun, 1\\
 but, Conj, 1\\
 thee, Noun, 0\\
@@ -326,11 +341,11 @@ not, Adverb, 1\\
 you, Pronoun, 1\\
 it, Pronoun, 1\\
 thou, Noun, 1\\
-and, Conj, 1\\
+and, Conj, 1
 
 \section{\textbf{15 States:}}
 
-\textbf{State 1:}\\
+\noindent\textbf{State 1:}\\
 live, Adj, 1\\
 still, Adverb, 1\\
 as, Conj, 1\\
@@ -342,7 +357,7 @@ in, Conj, 1\\
 which, Adj, 1\\
 be, Verb, 1\\
 \\
-\textbf{State 2:}\\
+\noindent\textbf{State 2:}\\
 may, Adverb, 1\\
 hath, Noun, 1\\
 is, Verb, 1\\
@@ -354,7 +369,7 @@ be, Verb, 1\\
 his, Pronoun, 1\\
 doth, Noun, 1\\
 \\
-\textbf{State 3:} \\
+\noindent\textbf{State 3:} \\
 he, Pronoun, 1\\
 never, Adverb, 2\\
 have, Verb, 1\\
@@ -366,7 +381,7 @@ is, Verb, 1\\
 not, Adverb, 1\\
 i, Noun, 1\\
 \\
-\textbf{State 4:} \\
+\noindent\textbf{State 4:} \\
 should, Adverb, 1\\
 when, Adverb, 1\\
 shall, Adverb, 1\\
@@ -378,7 +393,7 @@ did, Verb, 1\\
 beauty, Noun, 2\\
 are, Verb, 1\\
 \\
-\textbf{State 5:} \\
+\noindent\textbf{State 5:} \\
 it, Pronoun, 1\\
 thing, Noun, 1\\
 day, Noun, 1\\
@@ -390,7 +405,7 @@ not, Adverb, 1\\
 time, Noun, 1\\
 more, Adverb, 1\\
 \\
-\textbf{State 6:} \\
+\noindent\textbf{State 6:} \\
 though, Conj, 1\\
 which, Adj, 1\\
 where, Adverb, 1\\
@@ -402,7 +417,7 @@ or, Conj, 1\\
 but, Conj, 1\\
 that, Conj, 1\\
 \\
-\textbf{State 7:} \\
+\noindent\textbf{State 7:} \\
 o, Noun, 1\\
 whose, Pronoun, 1\\
 then, Adverb, 1\\
@@ -414,7 +429,7 @@ nor, Conj, 1\\
 and, Conj, 1\\
 for, Conj, 1\\
 \\
-\textbf{State 8:} \\
+\noindent\textbf{State 8:} \\
 will, Adverb, 1\\
 to, Prep, 1\\
 sweet, Noun, 1\\
@@ -426,7 +441,7 @@ in, Conj, 1\\
 self, Noun, 1\\
 love, Noun, 1\\
 \\
-\textbf{State 9:} \\
+\noindent\textbf{State 9:} \\
 o, Noun, 1\\
 i, Noun, 1\\
 look, Noun, 1\\
@@ -438,7 +453,7 @@ then, Adverb, 1\\
 yet, Adverb, 1\\
 when, Adverb, 1\\
 \\
-\textbf{State 10:} \\
+\noindent\textbf{State 10:} \\
 his, Pronoun, 1\\
 true, Adj, 0\\
 thee, Noun, 0\\
@@ -450,7 +465,7 @@ mine, Noun, 1\\
 your, Pronoun, 1\\
 thy, Noun, 1\\
 \\
-\textbf{State 11:} \\
+\noindent\textbf{State 11:} \\
 why, Adverb, 1\\
 with, Conj, 1\\
 then, Adverb, 1\\
@@ -462,7 +477,7 @@ you, Pronoun, 1\\
 but, Conj, 1\\
 i, Noun, 1\\
 \\
-\textbf{State 12:} \\
+\noindent\textbf{State 12:} \\
 so, Adverb, 1\\
 what, Pronoun, 1\\
 love, Noun, 1\\
@@ -474,7 +489,7 @@ have, Verb, 1\\
 do, Verb, 1\\
 as, Conj, 1\\
 \\
-\textbf{State 13:} \\
+\noindent\textbf{State 13:} \\
 you, Pronoun, 1\\
 his, Pronoun, 1\\
 their, Pronoun, 1\\
@@ -486,7 +501,7 @@ me, Pronoun, 1\\
 a, Adj, 1\\
 thee, Noun, 0\\
 \\
-\textbf{State 14:} \\
+\noindent\textbf{State 14:} \\
 that, Conj, 1\\
 this, Adj, 1\\
 from, Conj, 1\\
@@ -498,7 +513,7 @@ with, Conj, 1\\
 all, Adj, 1\\
 to, Prep, 1\\
 \\
-\textbf{State 15:} \\
+\noindent\textbf{State 15:} \\
 for, Conj, 1\\
 than, Conj, 1\\
 one, Noun, 1\\
@@ -512,6 +527,92 @@ a, Adj, 1\\
 
 \end{multicols}
 
+\pagebreak
+\section{Appendix B - Parts of Speech}
+We trained 3 models, one each of 5, 10, and 15 hidden states. We analyzed how often each model emitted words representing each part of speech. We observed that, especially for the more complicated models, significant specialization occured. Graphs were generated with Matplotlib.
 
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/parts_of_speech_5}
+\end{center}
+
+For the model of 5 hidden states, moderate specialization has occured. In particular, smaller categories such as prepositions and adverbs have significant variance between states. Nouns, however, have similar frequencies across states.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/parts_of_speech_10}
+\end{center}
+
+For the model of 10 hidden states, significant specialization has occured for all parts of speech.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/parts_of_speech_15}
+\end{center}
+
+For the model of 15 hidden states, massive specialization has occured. In particular, prepositions exist almost solely in state 7.
+
+\pagebreak
+\section{Appendix C - Syllable Counts}
+We trained 3 models, one each of 5, 10, and 15 hidden states. We analyzed how often each state in each model emitted words of different syllabic lengths. We found that, while there were differences between states, they were not as prominent as differences between the frequencies with which states emitted different parts of speech. As a result, it appears more likely that differences in syllable count frequencies are a side effect of the models learning other factors. Note that the data include words with 0 syllables; this is an error on the part of the publicly available code used to count syllables, and in effect represents a reasonable estimate for the error this data. Graphs were generated with Matplotlib.
+
+\begin{center}
+\includegraphics[scale=0.5]{../src/results/syllables_5}
+\end{center}
+
+Syllable frequencies for the model of 5 hidden states. Note the lack of variation between states.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/syllables_10}
+\end{center}
+
+Syllable frequencies for the model of 10 hidden states. This model demonstrates more variance than the model of 5 states, although this is likely an artifact of the model learning other factors (namely, parts of speech).
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/syllables_15}
+\end{center}
+
+Syllable frequencies for the model of 15 hidden states. As in the model of 10 states, the differences in this data are most likely a side effect of the model learning parts of speech.
+
+\pagebreak
+\section{Appendix D - Transition Frequencies}
+We visualize the transition frequencies between various states. This information does not explicitly give information about the underlying meaning of states, and is presented here both for completeness and because it is used in visualizing the network of the HMMs.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/transitions_5}
+\end{center}
+
+Transition frequencies for the model of 5 hidden states.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/transitions_10}
+\end{center}
+
+Transition frequencies for the model of 10 hidden states.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/transitions_15}
+\end{center}
+
+Transition frequencies for the model of 15 hidden states.
+
+\pagebreak
+\section{Appendix E - HMM Networks}
+We visualize the entire HMM as a network for each model. Each state shows parts of speech that it represents at an unusually high rate (mean + 0.5*std), or (if no part of speech is emitted that frequently) the part of speech that it emits at the highest rate above the mean. Directed edges are added between states when the transition probability is higher than the mean. Given our conclusion that the model learns parts of speech primarily, this provides a visualization of the main parameters learned by our model. Note that the shown parts of speech are those represented disproportionately for the state; this does not mean that the state predominately emits those parts of speech, only that it emits them at an unusually high rate.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/graph_5}
+\end{center}
+
+Network model for the 5 state HMM. Note the emergence of rudimentary grammatical structure.
+
+\begin{center}
+\includegraphics[scale=0.6]{../src/results/graph_10}
+\end{center}
+
+Network model for the 10 state HMM. Note the formation of `hubs' at states 2, 3, and 7. Further note the increased grammatical structure evident in the transitions (i.e., Noun states linking to Verb states, Adverbs to Verbs, etc.).
+
+\begin{center}
+\includegraphics[scale=0.5]{../src/results/graph_15}
+\end{center}
+
+Network model for the 15 state HMM. Note the increasing formation of hubs, particularly at states 13 and 14. This is likely a result of the high emission rates of adjectives and conjunctions in 13 and 14, respectively (see Appendix B).
 
 \end{document}
