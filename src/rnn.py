@@ -31,7 +31,7 @@ def load():
 
     return text, char_to_int, int_to_char
 
-seq_length = 40
+seq_length = 60
 dataX = []
 Y = []
 train_model = False
@@ -60,13 +60,14 @@ Y = np_utils.to_categorical(Y)
 if train_model:
     # RNN Network
     model = Sequential()
-    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), consume_less='cpu', unroll=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(128, return_sequences=False, consume_less='cpu'))
-    model.add(Dropout(0.2))
+    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), \
+        consume_less='cpu', unroll=True, return_sequences=True))
+    model.add(Dropout(0.3))
+    model.add(LSTM(64, return_sequences=False, consume_less='cpu'))
+    model.add(Dropout(0.3))
     model.add(Dense(Y.shape[1], activation='softmax'))
 
-    filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
+    filename = 'models/rnn-128x64-60-{epoch:02d}-{loss:.4f}.hdf5'
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
@@ -74,12 +75,12 @@ if train_model:
     model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
 
 if resume_training:
-    filename = 'models/veb2.hdf5'
+    filename = 'models/rnn-05-2.4479.hdf5'
     model = load_model(filename)
     model.summary()
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     
-    filename = 'models/rnn-128x128-{epoch:02d}-{loss:.4f}.hdf5'
+    filename = 'models/rnn-64x32-20-{epoch:02d}-{loss:.4f}.hdf5'
     checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
     callbacks_list = [checkpoint]
 
@@ -87,7 +88,7 @@ if resume_training:
     model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
 
 if generate:
-    filename = 'models/rnn-128x128-02-2.0459.hdf5'
+    filename = 'models/rnn-128x64-60-10-2.4089.hdf5'
     model = load_model(filename)
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
