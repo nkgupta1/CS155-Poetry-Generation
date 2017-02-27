@@ -75,14 +75,21 @@ We used the supervised and unsupervised HMM code as the base for our HMM models 
 
 
 \section{Visualization and Interpretation}
+For visualization purposes, three models (one each with 5, 10, and 15 hidden states) were trained. We analyzed the top words associated with each model, as well as the frequency with which each state emitted each part of speech, words with certain number of syllables, and the transition frequencies between states.
+
 \medskip
 
-\subsection{For at least 5 hidden states give a list of the top 10 words that associate with this hidden state and
-state any common features these groups.}
-\subsection{What are some properties of the different hidden states?}
-\subsection{e.g. Correlation between hidden states and syllable counts, connotations of words, etc.}
-\subsection{Make a visual representation of the correlation between states and words}
+% \subsection{For at least 5 hidden \textbf{States give a list of the top 10 words that associate with this hidden \textbf{State and \textbf{State any common features these groups.}
+\subsection{Top Words Associated with each state}
+For a list of the most common words associated with each state, please see Appendix A.\\
 
+For the simplest model (5 hidden states), all words are one syllable. Many are repeated between lists, and in particular there appears to be little specialization between states. For the larger model, several two syllable words are represented and words are repeated at a lower frequency. Specifically, each word is repeated an average of 1.389 times in the 5 state model, 1.639 times in the 10 state model, and 1.705 times in the 15 state model. Clearly, the more advanced model allows for better specialization of each state.
+
+% \subsection{What are some properties of the different hidden states?}
+% \subsection{e.g. Correlation between hidden states and syllable counts, connotations of words, etc.}
+% \subsection{Make a visual representation of the correlation between states and words}
+\subsection{Interpretatin of Hidden States}
+We consider the possibilities that hidden states learn parts of speech or syllable counts. Our model did not appear to demonstrate iambic pentameter, so we discount the possibility that it learned meter sufficiently well. As above, we analyze HMMs with 5, 10, and 15 hidden states.
 
 \section{Additional Goals}
 \medskip
@@ -95,7 +102,38 @@ We were able to add rhyming and a fixed number of syllables per line to our supe
 \medskip
 
 \subsection{What did you use to collect more data and what packages did you use for RNN/LSTM?}
+We used both the data sets, Shakespeare and Spenser. We did not any data in addition to these two sets of data. We used Keras with a TensorFlow backend for the RNN/LSTM.
 \subsection{Compare/contrast the effect of these algorithms to HMM and why you think they were better or worse}
+The RNN was much more finicky than the HMM was in that it was much more sensitive to parameters than the HMM was. In particular, if a network was under trained, all it did was output a single word, usually \texttt{the}. The three main parameters we varied over the different networks was the architecture (we tried 64x32, 128x64, 128x128, 256x128, 256x256, 1024x256), the number of iterations of training (the optimal number varied based on the network architecture), and the input sequence length. If the network was over trained, it usually repeated a short phrase or just memorized passages from the original text. As such, there was a very small range where the network generated a novel, potentially good output. Furthermore, smaller networks just repeated the same short phrase over and over again while the larger networks just repeated larger phrases if not just memorizing full passages from the data set. \\
+\indent We believe the reason that we had more success with the HMM is that in general, RNNs are difficult to train, especially on the limited quantity of data that we had. Neural networks in general require a large amount of data to train since they have many parameters. To combat this, we limited the depth of the network, and therefore the number of parameters which meant we were limiting the power of the RNN. While RNNs have much more potential, the data set was too small to train a good model. As such, HMMs were better on the smaller data set, even though they do not have as much potential as a RNN because they can only look one state back. The RNN took much longer to train than the HMM (1.5 minutes per iteration on average vs. 10 seconds per iteration) . \\
+\indent We fed input into the network character by character in order to reduce the input size. We made all characters lowercase to further reduce input. We trained the RNN in an unsupervised manner. In order to generate output, we seeded the model with sequence of characters selected from the sonnets, which when fed into the network, generated the next character. We appended this character to the input sequence, removing one of the other characters and fed it back into the network, repeating until we got a poem of the desired length. \\
+\indent Here is an example of an excerpt generated from a model that was overfit to the data (architecture of 1024x256 trained for 150 iterations): \\
+\texttt{
+    i move to hear her speak, \\
+    yet well i know, \\
+    that music hath a far more pleasing sound: \\
+    i grant i never saw a goddess go, \\
+    my mistress when she walks treads on the ground. \\
+    and yet by heaven i think my love as lare \\
+} \\
+which is just a copy of Shakespeare's sonnet 130. One of the more successful generations we got is the following, generated with 1024x256 with 20 iterations: \\
+\texttt{
+    That love in move that I am stained, \\
+    And thet in thee art shat I have seen she torld and hr thee, \\
+    And therefore hand that thou aestaintance, \\
+    And thet in thee I say tort the eane, \\
+    So shall thou that which I have steared, \\
+    The have the len of mort of thine eyes, \\
+    And in the world with shale the love, \\
+    Oo marker then thou art as the world and wouth, \\
+    And in the world would may still so more, \\
+    And yours toue love wou are io heaven shall stay, \\
+    Which in their sarte of think the soues, \\
+    And therefore hand that thou aestaintance, \\
+    And thet in thee I say tort the eane, \\
+    So shall thou that which I have steared, \\
+    The have the len of mort of thine eyes. \\
+}
 
 
 \section{Conclusion}
@@ -103,6 +141,380 @@ We were able to add rhyming and a fixed number of syllables per line to our supe
 
 \subsection{How was the work divided up?}
 \subsection{What are your conclusions/observations about the models you used and the sonnets generated?}
+
+\pagebreak
+\section{Appendix A - Most Associated Words}
+The words listed below were generated by training HMMs with 5, 10, and 15 hidden states and observing which words were most likely to be emitted from each state. For purposes of comparison, part of speech and syllable count information is provided. It is worth noting that classification was done automatically, through publically available packages; the accuracy of classifications in this data is not guaranteed, and indeed several notable errors exist (i.e., doth is not a noun, therefore does not have 3 syllables, and neither true nor thee (nor any other word) has 0 syllables). These errors have been retained below.
+
+\begin{multicols}{4}
+
+\section{\textbf{5 States:}}
+
+\textbf{State 1:} \\
+doth, Noun, 1\\
+nor, Conj, 1\\
+is, Verb, 1\\
+thy, Noun, 1\\
+no, Adj, 1\\
+which, Adj, 1\\
+but, Conj, 1\\
+and, Conj, 1\\
+to, Prep, 1\\
+that, Conj, 1\\
+\\
+\textbf{State 2:} \\
+it, Pronoun, 1\\
+i, Noun, 1\\
+not, Adverb, 1\\
+me, Pronoun, 1\\
+is, Verb, 1\\
+that, Conj, 1\\
+with, Conj, 1\\
+thy, Noun, 1\\
+thou, Noun, 1\\
+to, Prep, 1\\
+\\
+\textbf{State 3:} \\
+the, Adj, 1\\
+as, Conj, 1\\
+when, Adverb, 1\\
+what, Pronoun, 1\\
+if, Conj, 1\\
+that, Conj, 1\\
+so, Adverb, 1\\
+for, Conj, 1\\
+of, Conj, 1\\
+in, Conj, 1\\
+\\
+\textbf{State 4:} \\
+me, Pronoun, 1\\
+o, Noun, 1\\
+for, Conj, 1\\
+art, Noun, 1\\
+thee, Noun, 0\\
+his, Pronoun, 1\\
+i, Noun, 1\\
+self, Noun, 1\\
+love, Noun, 1\\
+be, Verb, 1\\
+\\
+\textbf{State 5:} \\
+as, Conj, 1\\
+doth, Noun, 1\\
+have, Verb, 1\\
+do, Verb, 1\\
+by, Conj, 1\\
+and, Conj, 1\\
+a, Adj, 1\\
+in, Conj, 1\\
+i, Noun, 1\\
+the, Adj, 1\\
+
+\section{\textbf{10 States:}}
+
+\textbf{State 1:}\\
+therefore, Adverb, 3\\
+without, Conj, 2\\
+as, Conj, 1\\
+against, Conj, 2\\
+how, Adverb, 1\\
+since, Conj, 1\\
+or, Conj, 1\\
+for, Conj, 1\\
+o, Noun, 1\\
+but, Conj, 1\\
+\\
+\textbf{State 2:} \\
+that, Conj, 1\\
+heart, Noun, 1\\
+world, Noun, 1\\
+then, Adverb, 1\\
+all, Adj, 1\\
+eye, Noun, 1\\
+eyes, Noun, 1\\
+his, Pronoun, 1\\
+self, Noun, 1\\
+love, Noun, 1\\
+\\
+\textbf{State 3:} \\
+for, Conj, 1\\
+by, Conj, 1\\
+with, Conj, 1\\
+all, Adj, 1\\
+that, Conj, 1\\
+is, Verb, 1\\
+to, Prep, 1\\
+be, Verb, 1\\
+not, Adverb, 1\\
+of, Conj, 1\\
+\\
+\textbf{State 4:} \\
+of, Conj, 1\\
+it, Pronoun, 1\\
+am, Verb, 1\\
+as, Conj, 1\\
+can, Adverb, 1\\
+will, Adverb, 1\\
+shall, Adverb, 1\\
+have, Verb, 1\\
+do, Verb, 1\\
+is, Verb, 1\\
+\\
+\textbf{State 5:} \\
+your, Pronoun, 1\\
+still, Adverb, 1\\
+all, Adj, 1\\
+with, Conj, 1\\
+thee, Noun, 0\\
+his, Pronoun, 1\\
+and, Conj, 1\\
+doth, Noun, 1\\
+in, Conj, 1\\
+a, Adj, 1\\
+\\
+\textbf{State 6:} \\
+but, Conj, 1\\
+so, Adverb, 1\\
+and, Conj, 1\\
+what, Pronoun, 1\\
+yet, Adverb, 1\\
+as, Conj, 1\\
+then, Adverb, 1\\
+that, Conj, 1\\
+if, Conj, 1\\
+for, Conj, 1\\
+\\
+\textbf{State 7:} \\
+hath, Noun, 1\\
+or, Conj, 1\\
+mine, Noun, 1\\
+of, Conj, 1\\
+that, Conj, 1\\
+and, Conj, 1\\
+my, Pronoun, 1\\
+with, Conj, 1\\
+thy, Noun, 1\\
+the, Adj, 1\\
+\\
+\textbf{State 8:} \\
+on, Conj, 1\\
+to, Prep, 1\\
+their, Pronoun, 1\\
+this, Adj, 1\\
+me, Pronoun, 1\\
+your, Pronoun, 1\\
+so, Adverb, 1\\
+thou, Noun, 1\\
+thy, Noun, 1\\
+my, Pronoun, 1\\
+\\
+\textbf{State 9:} \\
+thee, Noun, 0\\
+beauty, Noun, 2\\
+than, Conj, 1\\
+self, Noun, 1\\
+heart, Noun, 1\\
+a, Adj, 1\\
+own, Adj, 1\\
+my, Pronoun, 1\\
+sweet, Noun, 1\\
+love, Noun, 1\\
+\\
+\textbf{State 10:} \\
+they, Pronoun, 1\\
+but, Conj, 1\\
+thee, Noun, 0\\
+so, Adverb, 1\\
+to, Prep, 1\\
+not, Adverb, 1\\
+you, Pronoun, 1\\
+it, Pronoun, 1\\
+thou, Noun, 1\\
+and, Conj, 1\\
+
+\section{\textbf{15 States:}}
+
+\textbf{State 1:}\\
+live, Adj, 1\\
+still, Adverb, 1\\
+as, Conj, 1\\
+for, Conj, 1\\
+give, Verb, 1\\
+it, Pronoun, 1\\
+make, Verb, 1\\
+in, Conj, 1\\
+which, Adj, 1\\
+be, Verb, 1\\
+\\
+\textbf{State 2:}\\
+may, Adverb, 1\\
+hath, Noun, 1\\
+is, Verb, 1\\
+some, Adj, 1\\
+will, Adverb, 1\\
+shall, Adverb, 1\\
+that, Conj, 1\\
+be, Verb, 1\\
+his, Pronoun, 1\\
+doth, Noun, 1\\
+\\
+\textbf{State 3:} \\
+he, Pronoun, 1\\
+never, Adverb, 2\\
+have, Verb, 1\\
+time, Noun, 1\\
+thou, Noun, 1\\
+which, Adj, 1\\
+it, Pronoun, 1\\
+is, Verb, 1\\
+not, Adverb, 1\\
+i, Noun, 1\\
+\\
+\textbf{State 4:} \\
+should, Adverb, 1\\
+when, Adverb, 1\\
+shall, Adverb, 1\\
+sweet, Noun, 1\\
+if, Conj, 1\\
+might, Adverb, 1\\
+which, Adj, 1\\
+did, Verb, 1\\
+beauty, Noun, 2\\
+are, Verb, 1\\
+\\
+\textbf{State 5:} \\
+it, Pronoun, 1\\
+thing, Noun, 1\\
+day, Noun, 1\\
+truth, Noun, 1\\
+this, Adj, 1\\
+thee, Noun, 0\\
+him, Pronoun, 1\\
+not, Adverb, 1\\
+time, Noun, 1\\
+more, Adverb, 1\\
+\\
+\textbf{State 6:} \\
+though, Conj, 1\\
+which, Adj, 1\\
+where, Adverb, 1\\
+for, Conj, 1\\
+than, Conj, 1\\
+o, Noun, 1\\
+so, Adverb, 1\\
+or, Conj, 1\\
+but, Conj, 1\\
+that, Conj, 1\\
+\\
+\textbf{State 7:} \\
+o, Noun, 1\\
+whose, Pronoun, 1\\
+then, Adverb, 1\\
+which, Adj, 1\\
+no, Adj, 1\\
+let, Verb, 1\\
+from, Conj, 1\\
+nor, Conj, 1\\
+and, Conj, 1\\
+for, Conj, 1\\
+\\
+\textbf{State 8:} \\
+will, Adverb, 1\\
+to, Prep, 1\\
+sweet, Noun, 1\\
+eye, Noun, 1\\
+own, Adj, 1\\
+eyes, Noun, 1\\
+heart, Noun, 1\\
+in, Conj, 1\\
+self, Noun, 1\\
+love, Noun, 1\\
+\\
+\textbf{State 9:} \\
+o, Noun, 1\\
+i, Noun, 1\\
+look, Noun, 1\\
+you, Pronoun, 1\\
+who, Pronoun, 1\\
+he, Pronoun, 1\\
+how, Adverb, 1\\
+then, Adverb, 1\\
+yet, Adverb, 1\\
+when, Adverb, 1\\
+\\
+\textbf{State 10:} \\
+his, Pronoun, 1\\
+true, Adj, 0\\
+thee, Noun, 0\\
+have, Verb, 1\\
+i, Noun, 1\\
+thine, Noun, 1\\
+their, Pronoun, 1\\
+mine, Noun, 1\\
+your, Pronoun, 1\\
+thy, Noun, 1\\
+\\
+\textbf{State 11:} \\
+why, Adverb, 1\\
+with, Conj, 1\\
+then, Adverb, 1\\
+yet, Adverb, 1\\
+not, Adverb, 1\\
+so, Adverb, 1\\
+they, Pronoun, 1\\
+you, Pronoun, 1\\
+but, Conj, 1\\
+i, Noun, 1\\
+\\
+\textbf{State 12:} \\
+so, Adverb, 1\\
+what, Pronoun, 1\\
+love, Noun, 1\\
+if, Conj, 1\\
+when, Adverb, 1\\
+not, Adverb, 1\\
+art, Noun, 1\\
+have, Verb, 1\\
+do, Verb, 1\\
+as, Conj, 1\\
+\\
+\textbf{State 13:} \\
+you, Pronoun, 1\\
+his, Pronoun, 1\\
+their, Pronoun, 1\\
+no, Adj, 1\\
+such, Adj, 1\\
+that, Conj, 1\\
+this, Adj, 1\\
+me, Pronoun, 1\\
+a, Adj, 1\\
+thee, Noun, 0\\
+\\
+\textbf{State 14:} \\
+that, Conj, 1\\
+this, Adj, 1\\
+from, Conj, 1\\
+for, Conj, 1\\
+on, Conj, 1\\
+by, Conj, 1\\
+of, Conj, 1\\
+with, Conj, 1\\
+all, Adj, 1\\
+to, Prep, 1\\
+\\
+\textbf{State 15:} \\
+for, Conj, 1\\
+than, Conj, 1\\
+one, Noun, 1\\
+or, Conj, 1\\
+but, Conj, 1\\
+world, Noun, 1\\
+is, Verb, 1\\
+as, Conj, 1\\
+so, Adverb, 1\\
+a, Adj, 1\\
+
+\end{multicols}
 
 
 

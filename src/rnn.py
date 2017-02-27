@@ -31,7 +31,7 @@ def load():
 
     return text, char_to_int, int_to_char
 
-seq_length = 30
+seq_length = 60
 dataX = []
 Y = []
 train_model = False
@@ -89,7 +89,7 @@ if resume_training:
     model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if generate:
-    filename = 'models/rnn-79-1.1119.hdf5'
+    filename = 'models/rnn-128x64-60-10-2.4089.hdf5'
     print('loading', filename)
     model = load_model(filename)
     # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
