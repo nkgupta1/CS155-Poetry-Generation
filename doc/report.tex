@@ -53,13 +53,16 @@
 \medskip
 
 \subsection{What methods did you use and try to tokenize the sonnets?}
+In the supervised HMM models, the y-states were defined by the part of speech (POS) of a word mapped to a unique integer, and the x-observations were represented by each distinct word in the text mapped to a distinct integer. For these models, we used the Natural Language Toolkit (NLTK) library for python to tokenize the sonnets. It allowed us to split each line in the sonnet texts into words and tag them by their part of speech. A total of 34 and 31 distinct part of speech tags were found for the Shakespeare and Spenser texts. Among these tags, for example, three most popular POS tags were 6039 instances of nouns, 3126 instance of conjunctions, and 2681 instances of adjectives.\\
+\indent In the supervised HMM models, we removed the punctuation and possessive apostrophes including: [, : . ; ! ? ) ' ( `s] in pre-processing. This was done to simplify our model with less number of states and by removing nonsensical endings of phrases or sentences in our emissions.
 \subsection{Did you have to make changes to the way you tokenized after running the algorithm and seeing the results?}
-
+Initially, we included punctation as distinct observations in our model, but our model did not appear to train well on them and they broke many lines in a nonsensical manner, so they were removed. We also tried tokenizing the words  by their iambic pentameter and stress as well as giving a unique state for the last word in a line. Although we chose not to do this, the idea was to have distinct(POS) $\times$ distinct(Iambic) $\times$ distinct(part of line) states such that there would be a unique state for every combination of the three concepts. This was partly rejected because there was a better method for terminating a line with a fixed number of syllables, described in Additional Goals, and it would over-complicate the model.
 
 \section{Algorithm}
 \medskip
-
 \subsection{What packages did you use for the algorithm?}
+We used the supervised and unsupervised HMM code as the base for our HMM models in this project. The Numpy model helped with data manipulation. As mentioned earlier, the NLTK library was useful in tokenizing.\\
+\indent For the recurrent neural network, we used Keras with a Tensorflow backend to create a sequential model with long-term short-term memory (LSTM), a type of RNN, layers.
 \subsection{What decisions did you have to make when running the algorithm and what did you try? e.g number of states}
 \subsection{How did this affect the sonnets that were generated}
 
@@ -84,7 +87,8 @@ state any common features these groups.}
 \section{Additional Goals}
 \medskip
 
-\subsection{e.g. rhyme/meter}
+We were able to add rhyming and a fixed number of syllables per line to our supervised HMM model. This was done as follows. We acquired packages online that allowed us to check whether two words rhymed and the number of syllables in a word. Using these, we created a rhyming matrix (call this $R$) with dimensions distinct(observations) $\times$ distinct(observations) and filled it with boolean values to represent if a pair of words rhymed. For example, if a row-word and column-word rhymed, it had the value 1 in the matrix 0.01 if not given a ``tolerance" value of 0.01. We also created a one-dimensional vector (call this $S$), which contained the number of syllables for each distinct observation.\\
+\indent To implement rhyming and syllable counting, we did not alter the supervised training phase but the emission phase. Once the states were chosen from the HMM using weighted probabilities, we modified the probabilities by which the observations were chosen from them. Let $w$ be the vector of observation probabilities found for a particular state in the observation $O$ matrix. For every line generated in the sonnet, while the number of syllables remaining $l$ in the line was less than 10, we multiplied $w$ for the next word by the syllables vector where values greater than $l$ were thresholded to zero and else were one. This assured that we never created a line over 10 syllables in length. For lines in which the last word needed to rhyme with a previous line by the Shakespearean rhyming scheme, we then multiplied the indices of $w$ that equaled $l$ in the syllables vector by the row of the observation in $R$. Therefore, a word that didn't rhyme would only have a greater probability of being chosen relative to a rhyming word if it originally had greater than 100 times the probability to begin with if $R$ had a tolerance value of 0.01. Therefore, we did not force the last word to rhyme, but increased its weighted probability of becoming chosen.
 
 
 \section{Extra Credit}
