@@ -43,9 +43,9 @@
     \href{https://github.com/nkgupta1/CS155-Project2-Poetry-Generation}{https://github.com/nkgupta1/CS155-Project2-Poetry-Generation}
     
     \item \boldline{Division of labour} \\
-    Vaibhav Anand: \\
-    Nikhil Gupta: \\
-    Michael Hashe: 
+    Vaibhav Anand: Supervised HMM, Rhyming, Syllables, Report \\
+    Nikhil Gupta: Unsupervised HMM, RNN, Report \\
+    Michael Hashe: Data Visualization, Report
 
 \end{itemize}
 
@@ -53,23 +53,53 @@
 \medskip
 
 \subsection{What methods did you use and try to tokenize the sonnets?}
+In the supervised HMM models, the y-states were defined by the part of speech (POS) of a word mapped to a unique integer, and the x-observations were represented by each distinct word in the text mapped to a distinct integer. For these models, we used the Natural Language Toolkit (NLTK) library for python to tokenize the sonnets. It allowed us to split each line in the sonnet texts into words and tag them by their part of speech. A total of 34 and 31 distinct part of speech tags were found for the Shakespeare and Spenser texts, respectively. Among these tags, for example, three most popular POS tags were 6039 instances of nouns, 3126 instance of conjunctions, and 2681 instances of adjectives.\\
+\indent In the supervised HMM models, we removed the punctuation and possessive apostrophes including: [, : . ; ! ? ) ' ( `s] in pre-processing. This was done to simplify our model with less number of states and by removing nonsensical endings of phrases or sentences in our emissions.
 \subsection{Did you have to make changes to the way you tokenized after running the algorithm and seeing the results?}
-
+Initially, we included punctuation as distinct observations in our model, but our model did not appear to train well on them and they broke many lines in a nonsensical manner, so they were removed. We also tried tokenizing the words  by their iambic pentameter and stress as well as giving a unique state for the last word in a line. Although we chose not to do this, the idea was to have distinct(POS) $\times$ distinct(Iambic) $\times$ distinct(part of line) states such that there would be a unique state for every combination of the three concepts. This was partly rejected because there was a better method for terminating a line with a fixed number of syllables, described in Additional Goals, and it would over-complicate the model.
 
 \section{Algorithm}
 \medskip
-
 \subsection{What packages did you use for the algorithm?}
-\subsection{What decisions did you have to make when running the algorithm and what did you try? e.g number of States}
-\subsection{How did this affect the sonnets that were generated}
+We used the supervised and unsupervised HMM code from homework 5 as the base for our HMM models in this project. The NumPy package helped with data manipulation. As mentioned earlier, the NLTK library was useful in tokenizing and labeling parts of speech. For visualization, we used MathPlotLib, GraphViz, NLTK, and NumPy. \\
+\indent For the recurrent neural network, we used Keras with a Tensorflow backend to create a sequential model with long short-term memory (LSTM), a type of RNN, layers.
+\subsection{What decisions did you have to make when running the algorithm and what did you try? e.g number of states}
+We tried various number of states for the unsupervised model. We found that with too few states, the model just kept on generating sequences of nouns. As we kept on increasing the number of states, it was difficult to tell the difference in performance. However, as the number of states increased, so did training time. \\
+\indent For the supervised model with rhyming, we tried various levels of rhyming strengths and tolerance, where the rhyming strength denotes the strictness with which a pair of words were considered to rhyme and rhyming tolerance denotes the relative decrease in likelihood if a word did not rhyme when it was supposed to. We found that the lowest rhyming strength possible and low rhyming tolerance of 0.01 was most effective in generating rhymes when training the supervised HMM. \\
+\indent Another decision we had to make was how to break up the input and pass it into the model. We tried treating a line as a sequence, a sonnet as a sequence, and all the sonnets as a sequence. We also had to decide whether to keep capitalization and punctuation, both of which we ultimately removed. 
+\subsection{How did this affect the sonnets that were generated?}
+We found that with too few states, the model was not able to distinguish between the different parts of speech and as such, learned little to no grammar, making poems that made no sense. When treating all the sonnets as a single sequence, we found that the generated poems made less sense than the other methods. Capitalization and punctuation needlessly increased the number of observations for the models so we removed both of these.
 
 \section{Poetry Generation}
 \medskip
 
 \subsection{How did you generate your poem?}
-\subsection{How did you get your poem to look as much like a sonnet as possible?}
-\subsection{What makes sense/what doesn't about the sonnets generated?}
+The poems from by the supervised and unsupervised HMM models were generated word by word. In particular, we broke up each line into its component words, after stripping them of any punctuation and capitalization. At this point, we fed this set of inputs into the unsupervised HMM and let it train on it. For the RNN, the input was parsed character by character, with punctuation and line breaks kept in, with all capitalization removed. Here is an example of a poem that was generated with an unsupervised model with 30 states trained for 75 iterations: \\
+\begin{small}
+\texttt{
+My before minutes do doth could my stain and that, \\
+All thou my of to fee a them gives restore, \\
+Basest think thine oerpressed vassal wherewith thy home on thine, \\
+Fair in will fire from thy pain more nothing greet, \\
+Monument truetelling that clean thee idol tires decay doth away, \\
+Fortune threw thee bring self knowst hide that age steal, \\
+Self truth forgot first of buds once that favour thy, \\
+Alas whilst his needing a teachest doth sleep gored or, \\
+Keeps that me sadly i not thee special kept should, \\
+Part my than mounted thee will so our these slander, \\
+Have you beauty on i my breast praise rich of, \\
+And most me waves than prisoner taken of one of, \\
+All thee infection now to all remote thy that by, \\
+Like his thou away title in my self be of. \\
+}
+\end{small}
+This poem has some semblance of grammar but other than that, is terrible. It has no rhyme, rhythm, or syllable count. It makes no sense. It does not retain Shakespeare's voice. We suspect that the reason it is able to learn some grammar is because individual states are becoming associated with parts of speech. This point is elaborated on in the data visualization section.
 
+
+\subsection{How did you get your poem to look as much like a sonnet as possible?}
+For HMM, we initially created a model that split each line after the last word caused the line to exceed a fixed number of characters such as 60. We later developed a model to split each line by exactly 10 syllables by forcing the last word in the line to complete the 10th syllable. See Additional Goals for our implementation of Shakespearean rhyming and further information about fixed syllable count in the supervised HMM model.
+\subsection{What makes sense/what doesn't about the sonnets generated?}
+In comparison to the supervised models, we noticed that the sonnets generated by the unsupervised models had more trouble learning grammar and part of speech. This makes sense because the supervised HMM has more information off of which to train. For the unsupervised HMM, it was more common to see words of the same part of speech following each other, when the number of states was not ideal. In particular, the unsupervised model appeared to learn the grammar best when given a medium number of about 10 states, which likely corresponded with the realistic number of important and distinct parts of speech in the text. In the end, we decided to include an emission from the supervised model and not unsupervised in our submission, since it had the advantage of being given POS to learn the grammar better.
 
 \section{Visualization and Interpretation}
 For visualization purposes, three models (one each with 5, 10, and 15 hidden states) were trained. We analyzed the top words associated with each model, as well as the frequency with which each state emitted each part of speech, words with certain number of syllables, and the transition frequencies between states.
@@ -105,8 +135,8 @@ In conclusion, our HMM has learned patterns in Shakespeare's texts primarily thr
 
 \section{Additional Goals}
 \medskip
-
-\subsection{e.g. rhyme/meter}
+We were able to add rhyming and a fixed number of syllables per line to our supervised HMM model. This was done as follows. We acquired packages online that allowed us to check whether two words rhymed and the number of syllables in a word. Using these, we created a rhyming matrix (call this $R$) with dimensions distinct(observations) $\times$ distinct(observations) and filled it with boolean values to represent if a pair of words rhymed. For example, if a row-word and column-word rhymed, it had the value 1 in the matrix 0.01 if not given a ``tolerance" value of 0.01. We also created a one-dimensional vector (call this $S$), which contained the number of syllables for each distinct observation.\\
+\indent To implement rhyming and syllable counting, we did not alter the supervised training phase but the emission phase. Once the states were chosen from the HMM using weighted probabilities, we modified the probabilities by which the observations were chosen from them. Let $w$ be the vector of observation probabilities found for a particular state in the observation $O$ matrix. For every line generated in the sonnet, while the number of syllables remaining $l$ in the line was less than 10, we multiplied $w$ for the next word by the syllables vector where values greater than $l$ were thresholded to zero and else were one. This assured that we never created a line over 10 syllables in length. For lines in which the last word needed to rhyme with a previous line by the Shakespearean rhyming scheme, we then multiplied the indices of $w$ that equaled $l$ in the syllables vector by the row of the observation in $R$. Therefore, a word that didn't rhyme would only have a greater probability of being chosen relative to a rhyming word if it originally had greater than 100 times the probability to begin with if $R$ had a tolerance value of 0.01. Therefore, we did not force the last word to rhyme, but increased its weighted probability of becoming chosen.
 
 
 \section{Extra Credit}
@@ -119,15 +149,18 @@ The RNN was much more finicky than the HMM was in that it was much more sensitiv
 \indent We believe the reason that we had more success with the HMM is that in general, RNNs are difficult to train, especially on the limited quantity of data that we had. Neural networks in general require a large amount of data to train since they have many parameters. To combat this, we limited the depth of the network, and therefore the number of parameters which meant we were limiting the power of the RNN. While RNNs have much more potential, the data set was too small to train a good model. As such, HMMs were better on the smaller data set, even though they do not have as much potential as a RNN because they can only look one state back. The RNN took much longer to train than the HMM (1.5 minutes per iteration on average vs. 10 seconds per iteration) . \\
 \indent We fed input into the network character by character in order to reduce the input size. We made all characters lowercase to further reduce input. We trained the RNN in an unsupervised manner. In order to generate output, we seeded the model with sequence of characters selected from the sonnets, which when fed into the network, generated the next character. We appended this character to the input sequence, removing one of the other characters and fed it back into the network, repeating until we got a poem of the desired length. \\
 \indent Here is an example of an excerpt generated from a model that was overfit to the data (architecture of 1024x256 trained for 150 iterations): \\
+\begin{small}
 \texttt{
-    i move to hear her speak, \\
-    yet well i know, \\
-    that music hath a far more pleasing sound: \\
-    i grant i never saw a goddess go, \\
-    my mistress when she walks treads on the ground. \\
-    and yet by heaven i think my love as lare \\
-} \\
+    I move to hear her speak, \\
+    Yet well i know, \\
+    That music hath a far more pleasing sound: \\
+    I grant i never saw a goddess go, \\
+    My mistress when she walks treads on the ground. \\
+    And yet by heaven i think my love as lare \\
+} 
+\end{small}
 which is just a copy of Shakespeare's sonnet 130. One of the more successful generations we got is the following, generated with 1024x256 with 20 iterations: \\
+\begin{small}
 \texttt{
     That love in move that I am stained, \\
     And thet in thee art shat I have seen she torld and hr thee, \\
@@ -145,17 +178,18 @@ which is just a copy of Shakespeare's sonnet 130. One of the more successful gen
     So shall thou that which I have steared, \\
     The have the len of mort of thine eyes. \\
 }
+\end{small}
 
 
 \section{Conclusion}
 \medskip
 
-\subsection{How was the work divided up?}
 \subsection{What are your conclusions/observations about the models you used and the sonnets generated?}
+RNN has a lot of potential but on a data set of this size, it just repeated phrases. The unsupervised HMM had trouble learning proper grammar and even at its best, there were still significant passages with poor grammar. The supervised HMM was able to learning grammar better than the unsupervised model. Additionally, it was easier to do the additional goals with supervised HMM because we were able to define states for rhyming and syllables. 
 
 \pagebreak
 \section{Appendix A - Most Associated Words}
-The words listed below were generated by training HMMs with 5, 10, and 15 hidden states and observing which words were most likely to be emitted from each state. For purposes of comparison, part of speech and syllable count information is provided. It is worth noting that classification was done automatically, through publically available packages; the accuracy of classifications in this data is not guaranteed, and indeed several notable errors exist (i.e., doth is not a noun, therefore does not have 3 syllables, and neither true nor thee (nor any other word) has 0 syllables). These errors have been retained below.
+The words listed below were generated by training HMMs with 5, 10, and 15 hidden states and observing which words were most likely to be emitted from each state. For purposes of comparison, part of speech and syllable count information is provided. It is worth noting that classification was done automatically, through publicly available packages; the accuracy of classifications in this data is not guaranteed, and indeed several notable errors exist (i.e., doth is not a noun, therefore does not have 3 syllables, and neither true nor thee (nor any other word) has 0 syllables). These errors have been retained below.
 
 \begin{multicols}{4}
 
