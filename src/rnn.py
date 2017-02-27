@@ -31,7 +31,7 @@ def load():
 
     return text, char_to_int, int_to_char
 
-seq_length = 40
+seq_length = 30
 dataX = []
 Y = []
 train_model = False
@@ -55,7 +55,6 @@ X = X / len(char_to_int)
 # make one hot vector for the output
 Y = np_utils.to_categorical(Y)
 
-
 # fit the model
 if train_model:
     # RNN Network
@@ -69,28 +68,31 @@ if train_model:
 
     filename = 'models/rnn-256x256-{epoch:02d}-{loss:.4f}.hdf5'
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, 
+        save_best_only=True, mode='min', period=10)
     callbacks_list = [checkpoint]
     # fit the model
-    model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+    model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if resume_training:
     filename = 'models/rnn-256x256-149-1.7294.hdf5'
     model = load_model(filename)
     model.summary()
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     
-    filename = 'models/rnn-256x256-resume-{epoch:02d}-{loss:.4f}.hdf5'
-    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
+    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, 
+        save_best_only=True, mode='min', period=10)
     callbacks_list = [checkpoint]
 
     # fit the model
-    model.fit(X, Y, nb_epoch=150, batch_size=128, callbacks=callbacks_list)
+    model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if generate:
-    filename = 'models/rnn-256x256-19-1.7294.hdf5'
+    filename = 'models/rnn-79-1.1119.hdf5'
+    print('loading', filename)
     model = load_model(filename)
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # pick a random seed
     pattern = dataX[np.random.randint(0, len(dataX) - 1)]
@@ -111,7 +113,7 @@ if generate:
 
         if result == '\n':
             newline_count += 1
-        if newline_count == 15:
+        if newline_count == 100:
             break
             
         # update the input pattern
