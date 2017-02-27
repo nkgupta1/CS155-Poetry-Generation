@@ -32,12 +32,12 @@ def load():
 
     return text, char_to_int, int_to_char
 
-seq_length = 40
+seq_length = 30
 dataX = []
 Y = []
 train_model = False
-generate = False
-resume_training = True
+generate = True
+resume_training = False
 
 text, char_to_int, int_to_char = load()
 
@@ -57,41 +57,43 @@ X = X / len(char_to_int)
 Y = np_utils.to_categorical(Y)
 
 
-# fit the model
-model.fit(X, Y, nb_epoch=100, batch_size=128, callbacks=callbacks_list)
 if train_model:
     # RNN Network
     model = Sequential()
-    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), consume_less='cpu', unroll=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(128, return_sequences=False, consume_less='cpu'))
-    model.add(Dropout(0.2))
+    model.add(LSTM(512, input_shape=(X.shape[1], X.shape[2]), return_sequences=True,
+        consume_less='cpu', unroll=True))
+    model.add(Dropout(0.3))
+    model.add(LSTM(256, return_sequences=False, consume_less='cpu', unroll=True))
+    model.add(Dropout(0.3))
     model.add(Dense(Y.shape[1], activation='softmax'))
 
     filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, 
+        save_best_only=True, mode='min', period=10)
     callbacks_list = [checkpoint]
     # fit the model
-    model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+    model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if resume_training:
     filename = 'models/veb2.hdf5'
     model = load_model(filename)
     model.summary()
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     
-    filename = 'models/rnn-128x128-{epoch:02d}-{loss:.4f}.hdf5'
-    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, save_best_only=True, mode='min')
+    filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
+    checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, 
+        save_best_only=True, mode='min', period=10)
     callbacks_list = [checkpoint]
 
     # fit the model
-    model.fit(X, Y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+    model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if generate:
-    filename = 'models/veb2.hdf5'
+    filename = 'models/rnn-79-1.1119.hdf5'
+    print('loading', filename)
     model = load_model(filename)
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # pick a random seed
     pattern = dataX[np.random.randint(0, len(dataX) - 1)]
@@ -112,7 +114,7 @@ if generate:
 
         if result == '\n':
             newline_count += 1
-        if newline_count == 15:
+        if newline_count == 100:
             break
             
         # update the input pattern
