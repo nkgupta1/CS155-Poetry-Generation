@@ -53,15 +53,15 @@
 \medskip
 
 \subsection{What methods did you use and try to tokenize the sonnets?}
-In the supervised HMM models, the y-states were defined by the part of speech (POS) of a word mapped to a unique integer, and the x-observations were represented by each distinct word in the text mapped to a distinct integer. For these models, we used the Natural Language Toolkit (NLTK) library for python to tokenize the sonnets. It allowed us to split each line in the sonnet texts into words and tag them by their part of speech. A total of 34 and 31 distinct part of speech tags were found for the Shakespeare and Spenser texts, respectively. Among these tags, for example, three most popular POS tags were 6039 instances of nouns, 3126 instance of conjunctions, and 2681 instances of adjectives.\\
-\indent In the supervised HMM models, we removed the punctuation and possessive apostrophes including: [, : . ; ! ? ) ' ( `s] in pre-processing. This was done to simplify our model with less number of states and by removing nonsensical endings of phrases or sentences in our emissions.
+In the supervised HMM models, the y-states were defined by the part of speech (POS) of a word mapped to a unique integer, and the x-observations were represented by each distinct word in the text mapped to a distinct integer. For these models, we used the Natural Language Toolkit (NLTK) library for python to tokenize the sonnets. It allowed us to split each line in the sonnet texts into words and tag them by their part of speech. A total of 34 and 31 distinct part of speech tags were found for the Shakespeare and Spenser texts, respectively. Among these tags, for example, three most popular POS tags were 6039 instances of nouns, 3126 instances of conjunctions, and 2681 instances of adjectives.\\
+\indent In the supervised HMM models, we removed the punctuation and possessive apostrophes including: [, : . ; ! ? ) ' ( `s] in pre-processing. This was done to simplify our model with fewer number of states and by removing nonsensical endings of phrases or sentences in our emissions.
 \subsection{Did you have to make changes to the way you tokenized after running the algorithm and seeing the results?}
 Initially, we included punctuation as distinct observations in our model, but our model did not appear to train well on them and they broke many lines in a nonsensical manner, so they were removed. We also tried tokenizing the words  by their iambic pentameter and stress as well as giving a unique state for the last word in a line. Although we chose not to do this, the idea was to have distinct(POS) $\times$ distinct(Iambic) $\times$ distinct(part of line) states such that there would be a unique state for every combination of the three concepts. This was partly rejected because there was a better method for terminating a line with a fixed number of syllables, described in Additional Goals, and it would over-complicate the model.
 
 \section{Algorithm}
 \medskip
 \subsection{What packages did you use for the algorithm?}
-We used the supervised and unsupervised HMM code from homework 5 as the base for our HMM models in this project. The NumPy package helped with data manipulation. As mentioned earlier, the NLTK library was useful in tokenizing and labeling parts of speech. For visualization, we used MathPlotLib, GraphViz, NLTK, and NumPy. \\
+We used the supervised and unsupervised HMM code from homework 5 as the base for our HMM models in this project. The NumPy package helped with data manipulation. As mentioned earlier, the NLTK library was useful in tokenizing and labeling parts of speech. For visualization, we used MathPlotLib, Graphviz, NLTK, and NumPy. \\
 \indent For the recurrent neural network, we used Keras with a Tensorflow backend to create a sequential model with long short-term memory (LSTM), a type of RNN, layers.
 \subsection{What decisions did you have to make when running the algorithm and what did you try? e.g number of states}
 We tried various number of states for the unsupervised model. We found that with too few states, the model just kept on generating sequences of nouns. As we kept on increasing the number of states, it was difficult to tell the difference in performance. However, as the number of states increased, so did training time. \\
@@ -74,7 +74,7 @@ We found that with too few states, the model was not able to distinguish between
 \medskip
 
 \subsection{How did you generate your poem?}
-The poems from by the supervised and unsupervised HMM models were generated word by word. In particular, we broke up each line into its component words, after stripping them of any punctuation and capitalization. At this point, we fed this set of inputs into the unsupervised HMM and let it train on it. For the RNN, the input was parsed character by character, with punctuation and line breaks kept in, with all capitalization removed. Here is an example of a poem that was generated with an unsupervised model with 30 states trained for 75 iterations: \\
+The poems from by the supervised and unsupervised HMM models were generated word by word. In particular, we broke up each line into its component words, after stripping them of any punctuation and capitalization. At this point, we fed this set of inputs into the unsupervised HMM and let it train on it. For the RNN, the input was parsed character by character, with punctuation and line breaks kept in, with all capitalization removed. Here is an example of a poem that was generated with an unsupervised model with 30 states trained for 75 iterations: \\ \\
 \begin{small}
 \texttt{
 My before minutes do doth could my stain and that, \\
@@ -110,7 +110,7 @@ For visualization purposes, three models (one each with 5, 10, and 15 hidden sta
 \subsection{Top Words Associated with each state}
 For a list of the most common words associated with each state, please see Appendix A.\\
 
-For the simplest model (5 hidden states), all words are one syllable. Many are repeated between lists, and in particular there appears to be little specialization between states. For the larger model, several two syllable words are represented and words are repeated at a lower frequency. Specifically, each word is repeated an average of 1.389 times in the 5 state model, 1.639 (< 2 * 1.389) times in the 10 state model, and 1.705 (< 3 * 1.389) times in the 15 state model. Clearly, the more advanced model allows for better specialization of each state.
+For the simplest model (5 hidden states), all words are one syllable. Many are repeated between lists, and in particular there appears to be little specialization between states. For the larger model, several two syllable words are represented and words are repeated at a lower frequency. Specifically, each word is repeated an average of 1.389 times in the 5 state model, 1.639 ($< 2 * 1.389$) times in the 10 state model, and 1.705 ($< 3 * 1.389$) times in the 15 state model. Clearly, the more advanced model allows for better specialization of each state.
 
 % \subsection{What are some properties of the different hidden states?}
 % \subsection{e.g. Correlation between hidden states and syllable counts, connotations of words, etc.}
@@ -152,11 +152,11 @@ The RNN was much more finicky than the HMM was in that it was much more sensitiv
 \begin{small}
 \texttt{
     I move to hear her speak, \\
-    Yet well i know, \\
+    Yet well I know, \\
     That music hath a far more pleasing sound: \\
-    I grant i never saw a goddess go, \\
+    I grant I never saw a goddess go, \\
     My mistress when she walks treads on the ground. \\
-    And yet by heaven i think my love as lare \\
+    And yet by heaven I think my love as lare \\
 } 
 \end{small}
 which is just a copy of Shakespeare's sonnet 130. One of the more successful generations we got is the following, generated with 1024x256 with 20 iterations: \\
@@ -563,7 +563,7 @@ a, Adj, 1\\
 
 \pagebreak
 \section{Appendix B - Parts of Speech}
-We trained 3 models, one each of 5, 10, and 15 hidden states. We analyzed how often each model emitted words representing each part of speech. We observed that, especially for the more complicated models, significant specialization occured. Graphs were generated with Matplotlib.
+We visualized 3 models, one each of 5, 10, and 15 hidden states. In visualizing models with any more states than this, the graphs became unreadable. We analyzed how often each model emitted words representing each part of speech. We observed that, especially for the more complicated models, significant specialization occured. Graphs were generated with Matplotlib.
 
 \begin{center}
 \includegraphics[scale=0.6]{../src/results/parts_of_speech_5}
