@@ -3,7 +3,6 @@
 Recurrent Neural Network on sonnets.
 """
 
-import sys
 import numpy as np
 
 from keras.models import Sequential, load_model
@@ -56,18 +55,16 @@ X = X / len(char_to_int)
 # make one hot vector for the output
 Y = np_utils.to_categorical(Y)
 
-
+# fit the model
 if train_model:
     # RNN Network
     model = Sequential()
-    model.add(LSTM(512, input_shape=(X.shape[1], X.shape[2]), return_sequences=True,
-        consume_less='cpu', unroll=True))
-    model.add(Dropout(0.3))
-    model.add(LSTM(256, return_sequences=False, consume_less='cpu', unroll=True))
+    model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2]), \
+        consume_less='cpu', unroll=True, return_sequences=True))
     model.add(Dropout(0.3))
     model.add(Dense(Y.shape[1], activation='softmax'))
 
-    filename = 'models/rnn-{epoch:02d}-{loss:.4f}.hdf5'
+    filename = 'models/rnn-128x64-60-{epoch:02d}-{loss:.4f}.hdf5'
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     checkpoint = ModelCheckpoint(filename, monitor='loss', verbose=1, 
         save_best_only=True, mode='min', period=10)
@@ -76,7 +73,7 @@ if train_model:
     model.fit(X, Y, nb_epoch=1000, batch_size=128, callbacks=callbacks_list)
 
 if resume_training:
-    filename = 'models/veb2.hdf5'
+    filename = 'models/rnn-05-2.4479.hdf5'
     model = load_model(filename)
     model.summary()
     # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -110,7 +107,7 @@ if generate:
         ind = np.argmax(prediction)
         result = int_to_char[ind]
         # print out the character
-        sys.stdout.write(result)
+        print(result, flush=True, end='')
 
         if result == '\n':
             newline_count += 1
