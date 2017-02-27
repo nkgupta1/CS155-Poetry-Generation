@@ -185,7 +185,7 @@ which is just a copy of Shakespeare's sonnet 130. One of the more successful gen
 \medskip
 
 \subsection{What are your conclusions/observations about the models you used and the sonnets generated?}
-RNN has a lot of potential but on a data set of this size, it just repeated phrases. The unsupervised HMM had trouble learning proper grammar and even at its best, there were still significant passages with poor grammar. The supervised HMM was able to learning grammar better than the unsupervised model. Additionally, it was easier to do the additional goals with supervised HMM because we were able to define states for rhyming and syllables. 
+RNN has a lot of potential but on a data set of this size, it just repeated phrases. The unsupervised HMM had trouble learning proper grammar and even at its best, there were still significant passages with poor grammar. The supervised HMM was able to learn grammar better than the unsupervised model. Additionally, it was easier to do the additional goals with supervised HMM because we were able to define states for rhyming and syllables. 
 
 \pagebreak
 \section{Appendix A - Most Associated Words}
@@ -607,7 +607,7 @@ Syllable frequencies for the model of 15 hidden states. As in the model of 10 st
 
 \pagebreak
 \section{Appendix D - Transition Frequencies}
-We visualize the transition frequencies between various states. This information does not explicitly give information about the underlying meaning of states, and is presented here both for completeness and because it is used in visualizing the network of the HMMs.
+We visualize the transition frequencies between various states. This information does not explicitly give information about the underlying meaning of states, and is presented here both for completeness and because it is used in visualizing the network of the HMMs. Graphs were generated with Mathplotlib.
 
 \begin{center}
 \includegraphics[scale=0.6]{../src/results/transitions_5}
@@ -629,7 +629,7 @@ Transition frequencies for the model of 15 hidden states.
 
 \pagebreak
 \section{Appendix E - HMM Networks}
-We visualize the entire HMM as a network for each model. Each state shows parts of speech that it represents at an unusually high rate (mean + 0.5*std), or (if no part of speech is emitted that frequently) the part of speech that it emits at the highest rate above the mean. Directed edges are added between states when the transition probability is higher than the mean. Given our conclusion that the model learns parts of speech primarily, this provides a visualization of the main parameters learned by our model. Note that the shown parts of speech are those represented disproportionately for the state; this does not mean that the state predominately emits those parts of speech, only that it emits them at an unusually high rate.
+We visualize the entire HMM as a network for each model. Each state shows parts of speech that it represents at an unusually high rate (mean + 0.5*std), or (if no part of speech is emitted that frequently) the part of speech that it emits at the highest rate above the mean. Directed edges are added between states when the transition probability is higher than the mean. Given our conclusion that the model learns parts of speech primarily, this provides a visualization of the main parameters learned by our model. Note that the shown parts of speech are those represented disproportionately for the state; this does not mean that the state predominately emits those parts of speech, only that it emits them at an unusually high rate. Graphs were generated with Graphviz.
 
 \begin{center}
 \includegraphics[scale=0.6]{../src/results/graph_5}
