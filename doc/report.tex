@@ -70,7 +70,9 @@ We used the supervised and unsupervised HMM code as the base for our HMM models 
 \medskip
 
 \subsection{How did you generate your poem?}
+The poems from by the supervised and unsupervised HMM models were generated word by word whereas the poems from the RNN models were generated character by character.
 \subsection{How did you get your poem to look as much like a sonnet as possible?}
+See Additional Goals for our implementation of Shakespearean rhyming and fixed syllable count in the supervised HMM model.
 \subsection{What makes sense/what doesn't about the sonnets generated?}
 
 
@@ -93,7 +95,6 @@ We consider the possibilities that hidden states learn parts of speech or syllab
 
 \section{Additional Goals}
 \medskip
-
 We were able to add rhyming and a fixed number of syllables per line to our supervised HMM model. This was done as follows. We acquired packages online that allowed us to check whether two words rhymed and the number of syllables in a word. Using these, we created a rhyming matrix (call this $R$) with dimensions distinct(observations) $\times$ distinct(observations) and filled it with boolean values to represent if a pair of words rhymed. For example, if a row-word and column-word rhymed, it had the value 1 in the matrix 0.01 if not given a ``tolerance" value of 0.01. We also created a one-dimensional vector (call this $S$), which contained the number of syllables for each distinct observation.\\
 \indent To implement rhyming and syllable counting, we did not alter the supervised training phase but the emission phase. Once the states were chosen from the HMM using weighted probabilities, we modified the probabilities by which the observations were chosen from them. Let $w$ be the vector of observation probabilities found for a particular state in the observation $O$ matrix. For every line generated in the sonnet, while the number of syllables remaining $l$ in the line was less than 10, we multiplied $w$ for the next word by the syllables vector where values greater than $l$ were thresholded to zero and else were one. This assured that we never created a line over 10 syllables in length. For lines in which the last word needed to rhyme with a previous line by the Shakespearean rhyming scheme, we then multiplied the indices of $w$ that equaled $l$ in the syllables vector by the row of the observation in $R$. Therefore, a word that didn't rhyme would only have a greater probability of being chosen relative to a rhyming word if it originally had greater than 100 times the probability to begin with if $R$ had a tolerance value of 0.01. Therefore, we did not force the last word to rhyme, but increased its weighted probability of becoming chosen.
 
